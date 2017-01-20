@@ -5,7 +5,6 @@ java/java_framework/.metadata/
 java/java_framework/.settings/
 
 .metadata
-bin/
 tmp/
 *.tmp
 *.bak
@@ -55,7 +54,6 @@ local.properties
 # Code Recommenders
 .recommenders/
 
-*.class
 
 # BlueJ files
 *.ctxt
