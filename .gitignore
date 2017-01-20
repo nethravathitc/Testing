@@ -1,4 +1,8 @@
-java/.metadata
+java/.metadata/
+java/RemoteSystemsTempFiles/
+java/java_framework/RemoteSystemsTempFiles/
+java/java_framework/.metadata/
+java/java_framework/.settings/
 
 .metadata
 bin/
