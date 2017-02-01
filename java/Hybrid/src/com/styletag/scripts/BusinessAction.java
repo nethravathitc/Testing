@@ -9,8 +9,23 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
@@ -793,6 +808,59 @@ public class BusinessAction {
 		
 		
 	}
+	
+	public void emailReport()
+	{
+		final String username = "nethravathi.tc@styletag.com";
+	    final String password = "p@ssw0rdTc";
+
+	    Properties props = new Properties();
+	    props.put("mail.smtp.auth", "true");
+	    props.put("mail.smtp.starttls.enable", "true");
+	    props.put("mail.smtp.host", "smtp.gmail.com");
+	    props.put("mail.smtp.port", "587");
+
+	    Session session = Session.getInstance(props,
+	            new javax.mail.Authenticator() {
+	                protected PasswordAuthentication getPasswordAuthentication() {
+	                    return new PasswordAuthentication(username, password);
+	                }
+	            });
+
+	    try {
+
+	        Message message = new MimeMessage(session);
+	        message.setFrom(new InternetAddress("from.mail.nethravathi.tc@styletag.com"));
+	        message.setRecipients(Message.RecipientType.TO,
+	                InternetAddress.parse("to.rashmi.un@styletag.com"));
+	        message.setSubject("Testing Subject");
+	        message.setText("PFA for sanity reports");
+
+	        MimeBodyPart messageBodyPart = new MimeBodyPart();
+
+	        Multipart multipart = new MimeMultipart();
+
+	        messageBodyPart = new MimeBodyPart();
+	        String file = "//home//styletag//Sanity_report//report_date_31_01_17_time_17_04_40.xlsx";
+	        String fileName = "report_date_31_01_17_time_17_04_40.xlsx";
+	        DataSource source = new FileDataSource(file);
+	        messageBodyPart.setDataHandler(new DataHandler(source));
+	        messageBodyPart.setFileName(fileName);
+	        multipart.addBodyPart(messageBodyPart);
+
+	        message.setContent(multipart);
+
+	        System.out.println("Sending");
+
+	        Transport.send(message);
+
+	        System.out.println("Done");
+
+	    } catch (MessagingException e) {
+	        e.printStackTrace();
+	    }
+	 }
+	
 	
 	
 	public void testErrorpage1()
