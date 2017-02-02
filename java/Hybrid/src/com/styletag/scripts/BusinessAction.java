@@ -811,8 +811,8 @@ public class BusinessAction {
 	
 	public void emailReport()
 	{
-		final String username = "nethravathi.tc@styletag.com";
-	    final String password = "p@ssw0rdTc";
+		final String username = "tabs@styletag.com";
+	    final String password = "styletag321";
 
 	    Properties props = new Properties();
 	    props.put("mail.smtp.auth", "true");
@@ -830,10 +830,10 @@ public class BusinessAction {
 	    try {
 
 	        Message message = new MimeMessage(session);
-	        message.setFrom(new InternetAddress("from.mail.nethravathi.tc@styletag.com"));
+	        message.setFrom(new InternetAddress("tabs@styletag.com"));//from address
 	        message.setRecipients(Message.RecipientType.TO,
-	                InternetAddress.parse("to.rashmi.un@styletag.com"));
-	        message.setSubject("Testing Subject");
+	                InternetAddress.parse("nethravathi.tc@styletag.com,sumit.kumar@styletag.com,rashmi.un@styletag.com "));//to address
+	        message.setSubject("Sanity Report");
 	        message.setText("PFA for sanity reports");
 
 	        MimeBodyPart messageBodyPart = new MimeBodyPart();
@@ -841,8 +841,8 @@ public class BusinessAction {
 	        Multipart multipart = new MimeMultipart();
 
 	        messageBodyPart = new MimeBodyPart();
-	        String file = "//home//styletag//Sanity_report//report_date_31_01_17_time_17_04_40.xlsx";
-	        String fileName = "report_date_31_01_17_time_17_04_40.xlsx";
+	        String file = write.report_file_path;
+	        String fileName = write.file_name;
 	        DataSource source = new FileDataSource(file);
 	        messageBodyPart.setDataHandler(new DataHandler(source));
 	        messageBodyPart.setFileName(fileName);

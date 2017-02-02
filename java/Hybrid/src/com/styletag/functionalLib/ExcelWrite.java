@@ -24,7 +24,8 @@ public class ExcelWrite {
 	XSSFRow row ; Cell cell;
 	DateFormat df;
 	Date dateobj;
-	String path;
+	public static String  report_file_path="";
+	public static String file_name;
 	int rowsh1=0,rowsh2=0,rowsh3=0;
 	public static int log_row_num=0,error_row_num=0;
 	public static int log_newrow_flag=0,error_newrow_flag=0;
@@ -50,7 +51,8 @@ public class ExcelWrite {
 	    sd[1]=sd[1].replaceAll(":","_");
 	    d="_date_"+sd[0]+"_time_"+sd[1];
 	    
-	   path="//home//styletag//Sanity_report//report"+d+".xlsx";
+	    report_file_path="//home//styletag//sanity_reports//report"+d+".xlsx";
+	    file_name="report"+d+".xlsx";
 	   
 	   String msg1="TEST EXECUTION RESULTS ",msg2="DATE: "+df.format(dateobj);
 	   //rowsh1=0;rowsh2=0;
@@ -116,7 +118,7 @@ public class ExcelWrite {
 		
 		
 		try {
-			File file = new File(path);
+			File file = new File(report_file_path);
 			FileOutputStream out= new FileOutputStream(file);
 			workbook.write(out);
 		} catch (FileNotFoundException e) {
@@ -173,7 +175,7 @@ public class ExcelWrite {
 		
 		
 		try {
-			File file = new File(path);
+			File file = new File(report_file_path);
 			FileOutputStream out= new FileOutputStream(file);
 			workbook.write(out);
 		} catch (FileNotFoundException e) {
@@ -409,7 +411,7 @@ public class ExcelWrite {
 		}
 		
 		try {
-			File file = new File(path);
+			File file = new File(report_file_path);
 			FileOutputStream out= new FileOutputStream(file);
 			workbook.write(out);
 		} catch (FileNotFoundException e) {
