@@ -8,7 +8,7 @@ import com.styletag.functionalLib.*;
 
 public class Driver {
 	Method m;
-	public static int FLAG=0;
+	public static int FLAG=0;// set when in the business action function based on successful execution of the function
 	public static int column=0;
 	public static int row_flag=0;
 	public static int row_num=0;
@@ -19,7 +19,7 @@ public class Driver {
 		String execution_flag,actions,msg,url,failed_actions="";
 		ArrayList<String> array = new ArrayList<String>();
 		
-		url="http://www.styletag.com";
+		url="http://styletag.com";
 		ExcelWrite write= new ExcelWrite();
 		BusinessAction baction= new BusinessAction(write);
 		
@@ -46,7 +46,7 @@ public class Driver {
 		{	
 			array.add(""+i); // serial no's
 						
-			String scenario =msg=xl.read(i, 0);
+			String scenario = msg=xl.read(i, 0);
 			array.add(msg);
 			System.out.println("Test Scenario: "+msg);
 			
@@ -77,7 +77,7 @@ public class Driver {
 				{
 					actions = xl.read(i,j);
 					msg="Action"+k+": "+actions;
-					System.out.println("inside Driver action name "+actions);
+					//System.out.println("inside Driver action name "+actions);
 					if(!actions.equals(""))
 					{
 						write.writeReports("Log", msg,column);
@@ -92,7 +92,7 @@ public class Driver {
 							
 							column++;
 							row_flag=1;// this is to indicate rows are added already
-							System.out.println("Inside driver row_flag and col_no after executing a function"+row_flag+" "+column);
+							//System.out.println("Inside driver row_flag and col_no after executing a function"+row_flag+" "+column);
 							//row_num=row;
 							write.log_row_num=row_num_log;// to reset the row pointer to the position from where second column needs to starts writing
 							write.error_row_num=row_num_error;
@@ -104,13 +104,14 @@ public class Driver {
 								failed_actions=failed_actions.concat(actions);// adding Action name to Result sheet in case of error
 								failed_actions=failed_actions+" ";
 							}
+							FLAG=0; // resetting the FLAG
 						} catch (Exception e) 
 						{
 							//e.printStackTrace();
 						} 
 				
 					j++;
-					System.out.println("j value is "+j);
+					//System.out.println("j value is "+j);
 					k++;
 					
 				}while(xl.read(i,j)!=null);
@@ -119,10 +120,12 @@ public class Driver {
 					array.add("FAIL");
 				else
 					array.add("PASS");
+				
 				array.add(failed_actions);// adding failed action after the scenarios result
 				write.writeReports("Result", array);
 				row_flag=0;
 				failed_actions="";
+				
 				
 			}
 			i++;

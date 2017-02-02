@@ -148,7 +148,7 @@ public class ExcelWrite {
 				cell.setCellValue(msg.get(i));
 			}
 		}
-		if(sheetName.equals("Console"))
+		if(sheetName.equals("Log"))
 		{
 			rowsh2=spreadsheet2.getLastRowNum();
 			rowsh2++;
@@ -197,7 +197,7 @@ public class ExcelWrite {
 		
 		if(Driver.row_flag==0)// write to new rows by creating them
 		{	
-			System.out.println("inside if row_flag==0");
+			//System.out.println("inside if row_flag==0");
 		if (sheetName.equals("Result")) 
 		{	
 			rowsh1=spreadsheet1.getLastRowNum();
@@ -215,14 +215,14 @@ public class ExcelWrite {
 			rowsh2=spreadsheet2.getLastRowNum();
 			
 			rowsh2++;
-			System.out.println("writing to Row no inside Log"+rowsh2);
+			//System.out.println("writing to Row no inside Log"+rowsh2);
 			row= spreadsheet2.createRow(rowsh2);
 			if(column!=-1)
 				col=column;
 			
 			cell=row.createCell(col);
 			cell.setCellValue(msg);
-			System.out.println("added "+msg+" :  row col"+rowsh2+" "+col);
+			//System.out.println("added "+msg+" :  row col"+rowsh2+" "+col);
 		}
 		
 		if(sheetName.equals("Error"))
@@ -230,19 +230,19 @@ public class ExcelWrite {
 			rowsh3=spreadsheet3.getLastRowNum();
 			
 			rowsh3++;
-			System.out.println("writing to Row no inside Error"+rowsh3);
+			//System.out.println("writing to Row no inside Error"+rowsh3);
 			row= spreadsheet3.createRow(rowsh3);
 			if(column!=-1)
 				col=column;
 			
 			cell=row.createCell(col);
 			cell.setCellValue(msg);
-			System.out.println("added "+msg+" :  row col"+rowsh3+" "+col);
+			//System.out.println("added "+msg+" :  row col"+rowsh3+" "+col);
 		}
 		}
 		else // writing to created rows
 		{
-			System.out.println("Inside else ie row_flag==1");
+			//System.out.println("Inside else ie row_flag==1");
 			if (sheetName.equals("Result")) 
 			{	
 				int i=  Driver.row_num;
@@ -259,7 +259,7 @@ public class ExcelWrite {
 					{
 						
 						i++;
-						System.out.println("writing to row "+i);
+						//System.out.println("writing to row "+i);
 						row=spreadsheet1.getRow(i);
 						cell=row.createCell(column);
 						cell.setCellValue(msg);

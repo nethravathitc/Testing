@@ -29,7 +29,10 @@ public class UIobjects {
 	public static String proceed_to_checkout_button_css = "#cart-checkout-btn";
 	
 	//checkout page
+	public static String user_loggedin_emailid="#auth-body > div > div:nth-child(1) > p.font-16 > strong";
 	public static String continue_email_css = "#open-two";
+	public static String no_address_text="#address-body > div > div:nth-child(3) > div > p";
+	public static String add_address_button="#add-address-checkout";
 	public static String select_add1_css = "#address-body a.overflow-address :nth-child(1)";
 	public static String continue_add_css = "#open-three";
 	public static String proceed_to_pay_css = ".proceed-pay-btn";

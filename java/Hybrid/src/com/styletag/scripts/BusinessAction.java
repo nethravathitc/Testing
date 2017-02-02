@@ -152,10 +152,12 @@ public class BusinessAction {
 		webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).clear();
 		
 		msg="Entering "+search_keyword+" in search tab";
+		System.out.println(msg);
 		write.writeReports("Log",msg,Driver.column);
 		
 		webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).sendKeys(search_keyword);
 		webdriver.findElement(By.cssSelector(UIobjects.search_button_css)).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.page_title_css)));
 		String title = webdriver.findElement(By.cssSelector(UIobjects.page_title_css)).getText();
 		msg=" Search page title: "+title;
 		System.out.println(msg);
@@ -173,8 +175,7 @@ public class BusinessAction {
 			{	Driver.FLAG++;
 				write.writeReports("Log", "PASS",Driver.column);
 			}
-			else
-				Driver.FLAG++;
+							
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			msg="Products are not found in the search page";
@@ -207,6 +208,7 @@ public class BusinessAction {
 			compare(option);
 			if(Driver.FLAG!=0)
 				Driver.FLAG++;
+			
 			} catch (Exception e) {
 			Driver.FLAG=0;
 			write.writeReports("Log","FAIL inside sort function ", Driver.column);
@@ -226,6 +228,7 @@ public class BusinessAction {
 				compare(option);
 				if(Driver.FLAG!=0)
 					Driver.FLAG++;
+				
 			} catch (Exception e) {
 				Driver.FLAG=0;
 				write.writeReports("Log","FAIL inside sort function ", Driver.column);
@@ -253,11 +256,14 @@ public class BusinessAction {
 			System.out.println("slider value is: "+count1);
 			write.writeReports("Log","slider value is: "+count1,Driver.column );
 		} catch (NumberFormatException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			Driver.FLAG=0;
+			msg="coudn't parse/ get slider value";
+			write.writeReports("Log",msg,Driver.column);
+			write.writeReports("Error", msg,Driver.column);
+			printException(e1);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 			Driver.FLAG=0;
 		}
@@ -272,7 +278,6 @@ public class BusinessAction {
 				try {
 					Thread.sleep(5);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
@@ -301,7 +306,7 @@ public class BusinessAction {
 						System.out.println(msg);
 						write.writeReports("Log","FAIL",Driver.column);
 						write.writeReports("Error", msg,Driver.column);
-						
+											
 						sort_flag=1;
 						break;
 					}
@@ -360,10 +365,11 @@ public class BusinessAction {
 				Driver.FLAG=0;
 				File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
 				try {
-					FileUtils.copyFile(scrFile, new File("//home//styletag//java_exp_pgm//product_price_mismatch.png"));
+					FileUtils.copyFile(scrFile, new File("//home//styletag//sanity_reports//product_price_mismatch"+date+".png"));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					msg="Error while taking screenschot inside compare function";
+					write.writeReports("Error", msg,Driver.column);
 					//Driver.FLAG=0;
 				}
 				
@@ -439,7 +445,7 @@ public class BusinessAction {
 		int size_flag=0,size_presence_falg=0;
 		String parentBrowser = webdriver.getWindowHandle();// capturing parent tab browser.
 		
-		msg="clicking on product";
+		msg="selecting product";
 		System.out.println(msg);
 		write.writeReports("Log",msg,Driver.column);
 		//write.writeReports("Log", "clicking on product", Driver.column);
@@ -448,6 +454,9 @@ public class BusinessAction {
 		try {
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.product_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.product_css)).click();
+			msg="clicked on product";
+			System.out.println(msg);
+			write.writeReports("Log", msg,Driver.column);
 			
 			//get list of all tab browser
 			Set<String> allBrowser = webdriver.getWindowHandles();
@@ -457,7 +466,7 @@ public class BusinessAction {
 					{
 					//switching to child browser
 						webdriver.switchTo().window(eachBrower);
-						msg="moving to product detail page";
+						msg="moved to product detail page";
 						System.out.println(msg);
 						write.writeReports("Log",msg,Driver.column);
 						break;
@@ -480,7 +489,7 @@ public class BusinessAction {
 				wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.option_css)));
 				WebElement options= webdriver.findElement(By.cssSelector(UIobjects.option_css));
 				
-				msg="selecting size";
+				msg="Variants Exist and selecting the size";
 				System.out.println(msg);
 				write.writeReports("log",msg,Driver.column);
 				
@@ -497,8 +506,9 @@ public class BusinessAction {
 							System.out.println(msg);
 							write.writeReports("Log",msg,Driver.column);
 							size_flag=1;
+							break;
 						}
-						break;
+						
 				
 						}
 					catch (Exception e){
@@ -511,7 +521,6 @@ public class BusinessAction {
 				}				
 				
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				msg="Product with no Variants type";
 				System.out.println(msg);
@@ -538,6 +547,7 @@ public class BusinessAction {
 					
 				}
 				Driver.FLAG++;
+				write.writeReports("Log","PASS",Driver.column);
 			}
 			else
 			{
@@ -559,6 +569,7 @@ public class BusinessAction {
 					msg="Product is already added to cart";
 					System.out.println(msg);
 					write.writeReports("Log",msg,Driver.column);
+					write.writeReports("Log", "PASS",Driver.column);
 					Driver.FLAG++;
 				}
 				
@@ -567,7 +578,7 @@ public class BusinessAction {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			write.writeReports("log", "FAIL", Driver.column);
+			write.writeReports("Log", "FAIL", Driver.column);
 			write.writeReports("Error", "Following is the stack trace",Driver.column);
 			printException(e);// this to write exception to Error file.
 			Driver.FLAG=0;
@@ -577,13 +588,12 @@ public class BusinessAction {
 			File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
 			try {
 				
-				String path="//home//styletag//Sanity_report//screen_shots//ProductDetailPage"+date+".png";
+				String path="//home//styletag//sanity_report//screen_shots//ProductDetailPage"+date+".png";
 				FileUtils.copyFile(scrFile, new File(path));
 				msg="Screenshot taken";
 				System.out.println(msg);
 				write.writeReports("Log", msg,Driver.column);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -706,13 +716,24 @@ public class BusinessAction {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} 
+					if(Driver.FLAG!=0)
+					{
+						Driver.FLAG++;
+						write.writeReports("Log","PASS",Driver.column);
+					}
+					else
+					{
+						write.writeReports("Log","FAIL",Driver.column);
+						msg="Filter "+s1[i-1]+" - FAIL";
+						write.writeReports("Error",msg,Driver.column);
+					}
 				
 					Thread.sleep(3000);
 					wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#"+lowercase+" > span:nth-child("+i+") > label")));
 					webdriver.findElement(By.cssSelector("#"+lowercase+" > span:nth-child("+i+") > label")).click();
 					Thread.sleep(3000);
 					} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 				
@@ -725,88 +746,237 @@ public class BusinessAction {
 			try {
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 	public void cartCheck() {
-		try {
-			Thread.sleep(500);
+		
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e1) {
+				
+				e1.printStackTrace();
+			}
+			
 			System.out.println("Checking cart");
 			webdriver.findElement(By.cssSelector(UIobjects.minicart_css)).click();
-			Thread.sleep(3000);
-			ct_product_name= webdriver.findElement(By.cssSelector(UIobjects.cartProduct1_css)).getText().toLowerCase();
+			
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e1) {
+				
+				e1.printStackTrace();
+			}
+			
+			try{
+				ct_product_name= webdriver.findElement(By.cssSelector(UIobjects.cartProduct1_css)).getText().toLowerCase();
 			if(pd_product_name.equals(ct_product_name))
-				System.out.println("product is added to cart");
+			{
+				msg="product is added to cart";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Log","PASS",Driver.column);
+				Driver.FLAG++;
+			}
 			else
-				System.out.println("product is not added to cart");
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			{
+				msg="product is not added to cart";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Log", "FAIL",Driver.column);
+				Driver.FLAG=0;
+			}
+		} catch (Exception e) {// control comes here if it couldn't find ct_product_name
+			
 			e.printStackTrace();
+			write.writeReports("Log","FAIL",Driver.column);
+			printException(e);
+			Driver.FLAG=0;
 		}
 		
 		
 	}	
 	
 	public void checkout() {
-		try {
-			System.out.println("proceed to check out");
+		//try
+		{
+			
+			wait=new WebDriverWait(webdriver, 50);
+			System.out.println("clicking on mini cart to proceed to check out");
+			msg="clicking on mini cart to proceed to check out";
+			write.writeReports("Log", msg,Driver.column);
+			//System.out.println("proceed to check out");
 			webdriver.findElement(By.cssSelector(UIobjects.minicart_css)).click();
-			//Thread.sleep(2000);
+			
+			System.out.println();
+			msg="clicking on 'proceed to checkout button";
+			write.writeReports("Log", msg,Driver.column);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.proceed_to_checkout_button_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_checkout_button_css)).click();
 			//Thread.sleep(4000);
 			
-			System.out.println("proceed as logged in user");
+			String user_logged_in_email=webdriver.findElement(By.cssSelector(UIobjects.user_loggedin_emailid)).getText();
+			if(!(user_logged_in_email.equals("")))
+			{
+				
+				System.out.println("Error!! user Id is not displayed");
+				msg="Error!! user Id is not displayed";
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Log","FAIL",Driver.column);
+				write.writeReports("Error", msg,Driver.column);
+				
+				Driver.FLAG=0;
+				return;
+			}
+			else
+			{	
+				msg="User logged in as:  "+user_logged_in_email;
+				System.out.println();
+				write.writeReports("Log",msg,Driver.column);
+				
+			}
+			
+			
+			System.out.println("clicking on continue button");
+			msg="clicking on continue button";
+			write.writeReports("Log",msg,Driver.column);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.continue_email_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.continue_email_css)).click();
+			
+			
+			msg="selecting address";
+			System.out.println(msg);
+			write.writeReports("Log", msg,Driver.column);
+			
+			// to check "no_address_found text is displaying"
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e2) {
+				
+				e2.printStackTrace();
+			}
+			
+			/*String no_address=webdriver.findElement(By.cssSelector(UIobjects.no_address_text)).getText();
+			if(no_address.equals("No address found")) //need to add address
+			{
+				System.out.println("clicking on the ADD ADDRESS");
+				wait.until(ExpectedConditions.elementToBeSelected(By.cssSelector(UIobjects.add_address_button)));
+				webdriver.findElement(By.cssSelector(UIobjects.add_address_button)).click();
+				// need to fill the form
+			}*/
+			int add_select_flag=0;
+			int i;
+			for(i=2;i<=10;i++)
+			{	System.out.println("inside selecting add for loop");
+				wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > address:nth-child("+i+") > a.overflow-address.text-capitalize.col-dark-grey.ng-binding")));
+				webdriver.findElement(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > address:nth-child("+i+") > a.overflow-address.text-capitalize.col-dark-grey.ng-binding")).click();
+				
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				WebElement continue_button=webdriver.findElement(By.cssSelector(UIobjects.continue_add_css));
+				if(continue_button.isEnabled())
+				{
+					msg="address"+(i-1)+" is selected";
+					System.out.println(msg);
+					continue_button.click();
+					add_select_flag=1;
+					break;
+				}
+				
+			}
+			if(i>10 && add_select_flag==0) // couldnt select any addesses
+			{
+				msg="Address is not selected";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Log", "FAIL",Driver.column);
+				
+				write.writeReports("Error",msg,Driver.column);
+				msg="i value is "+i+" Exceeded selecting address";
+				write.writeReports("Error",msg,Driver.column);
+				Driver.FLAG=0;
+				return;
+			}
+			
+			
+		/*	wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.select_add1_css)));
+			WebElement continue_button=webdriver.findElement(By.cssSelector(UIobjects.continue_add_css));
+			int i=0;
+			while(!continue_button.isEnabled())
+			{
+				i++;
+				webdriver.findElement(By.cssSelector("#address-body a.overflow-address :nth-child("+i+")")).click();
+				Thread.sleep(1000);
+				
+			}*/
+			
+			
 			//Thread.sleep(2000);
 			
-			System.out.println("selecting address");
-			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.select_add1_css)));
-			webdriver.findElement(By.cssSelector(UIobjects.select_add1_css)).click();
-			Thread.sleep(1000);
-
-			webdriver.findElement(By.cssSelector(UIobjects.continue_add_css)).click();
-			//Thread.sleep(2000);
-			
-
-			System.out.println("clicking pay button");
+			msg="clicking PROCEED TO PAY button";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.proceed_to_pay_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_pay_css)).click();
 			//Thread.sleep(10000);
 			
-			System.out.println("COD payment");
+			msg="selecting COD payment";
+			System.out.println(msg);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.COD_btn_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.COD_btn_css)).click();
-			Thread.sleep(1000);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 			
 			System.out.println("COD payment");
 			int cod_flag=0;
 			if (webdriver.findElement(By.cssSelector("#codButton")).isDisplayed())
 				{
-					System.out.println("clicking on place order button");
-					webdriver.findElement(By.cssSelector("#codButton")).click();
-					cod_flag=1;
+					msg="clicking on place order button";
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					//webdriver.findElement(By.cssSelector("#codButton")).click();
+					//cod_flag=1;
 				}
 			else
 				System.out.println("COD not available");
 			
-			Thread.sleep(250000);
+			try {
+				Thread.sleep(250000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			if(cod_flag==1)
 			{
 				orderNo= webdriver.findElement(By.cssSelector("#order-cancel > div > section > p:nth-child(2) > span")).getText();
 				System.out.println(orderNo);
 			}
-		} catch (InterruptedException e) {
+			else
+			{
+				msg="something went wrong!! could't place COD order";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				write.writeReports("Log","FAIL",Driver.column);
+				write.writeReports("Error", msg,Driver.column);
+				Driver.FLAG=0;
+			}
+		} /*catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		
-		
+			Driver.FLAG=0;
+			write.writeReports("Log","FAIL",Driver.column);
+			
+		}*/
+				
 	}
 	
 	public void emailReport()

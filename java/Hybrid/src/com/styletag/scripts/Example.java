@@ -54,10 +54,10 @@ public class Example {
 		
 		Example ex = new Example();
 		
-		ex.launchStyletag("http://styletag.com");
-		//ex.login();
+		ex.launchStyletag("http://www.styletag.com");
+		ex.login();
 		//ex.clearCart();
-		//ex.addToCart();
+		ex.addToCart();
 		//ex.search();
 		ex.productCatalogPage();
 		
@@ -65,8 +65,8 @@ public class Example {
 		
 		//ex.applyFilters();
 		ex.productDetailPage();
-		//ex.cartCheck();
-		//ex.checkout();
+		ex.cartCheck();
+		ex.checkout();
 				
 	}
 	public void waitForSpinner(){
@@ -463,33 +463,98 @@ public class Example {
 	
 	public void checkout() {
 		try {
+			
 			System.out.println("clicking on mini cart to proceed to check out");
+			msg="clicking on mini cart to proceed to check out";
+			write.writeReports("Log", msg,Driver.column);
 			//System.out.println("proceed to check out");
 			webdriver.findElement(By.cssSelector(UIobjects.minicart_css)).click();
 			
-			System.out.println("clicking on 'proceed to checkout' button");
+			System.out.println();
+			msg="clicking on 'proceed to checkout button";
+			write.writeReports("Log", msg,Driver.column);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.proceed_to_checkout_button_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_checkout_button_css)).click();
 			//Thread.sleep(4000);
 			
-			String user_logged_in_email=webdriver.findElement(By.cssSelector("#auth-body > div > div:nth-child(1) > p.font-16 > strong")).getText();
+			String user_logged_in_email=webdriver.findElement(By.cssSelector(UIobjects.user_loggedin_emailid)).getText();
 			if(!(user_logged_in_email.equals("")))
 			{
+				
 				System.out.println("Error!! user Id is not displayed");
+				msg="Error!! user Id is not displayed";
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Log","FAIL",Driver.column);
+				write.writeReports("Error", msg,Driver.column);
+				
+				Driver.FLAG=0;
+				return;
 			}
 			else
-			{
-				System.out.println("User logged in as:  "+user_logged_in_email);
+			{	
+				msg="User logged in as:  "+user_logged_in_email;
+				System.out.println();
+				write.writeReports("Log",msg,Driver.column);
+				
 			}
 			
 			
-			System.out.println("proceeding as logged in user");
+			System.out.println("clicking on continue button");
+			msg="clicking on continue button";
+			write.writeReports("Log",msg,Driver.column);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.continue_email_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.continue_email_css)).click();
 			
 			
-			System.out.println("selecting address");
-			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.select_add1_css)));
+			msg="selecting address";
+			System.out.println(msg);
+			write.writeReports("Log", msg,Driver.column);
+			
+			// to check "no_address_found text is displaying"
+			Thread.sleep(500);
+			
+			String no_address=webdriver.findElement(By.cssSelector(UIobjects.no_address_text)).getText();
+			if(no_address.equals("No address found")) //need to add address
+			{
+				System.out.println("clicking on the ADD ADDRESS");
+				wait.until(ExpectedConditions.elementToBeSelected(By.cssSelector(UIobjects.add_address_button)));
+				webdriver.findElement(By.cssSelector(UIobjects.add_address_button)).click();
+				// need to fill the form
+			}
+			int add_select_flag=0;
+			int i;
+			for(i=2;i<=10;i++)
+			{
+				wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > address:nth-child("+i+") > a.overflow-address.text-capitalize.col-dark-grey.ng-binding")));
+				webdriver.findElement(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > address:nth-child("+i+") > a.overflow-address.text-capitalize.col-dark-grey.ng-binding")).click();
+				Thread.sleep(1500);
+				WebElement continue_button=webdriver.findElement(By.cssSelector(UIobjects.continue_add_css));
+				if(continue_button.isEnabled())
+				{
+					msg="address"+(i-1)+" is selected";
+					System.out.println(msg);
+					continue_button.click();
+					add_select_flag=1;
+					break;
+				}
+				
+			}
+			if(i>10 && add_select_flag==0) // couldnt select any addesses
+			{
+				msg="Address is not selected";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Log", "FAIL",Driver.column);
+				
+				write.writeReports("Error",msg,Driver.column);
+				msg="i value is "+i+" Exceeded selecting address";
+				write.writeReports("Error",msg,Driver.column);
+				Driver.FLAG=0;
+				return;
+			}
+			
+			
+		/*	wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.select_add1_css)));
 			WebElement continue_button=webdriver.findElement(By.cssSelector(UIobjects.continue_add_css));
 			int i=0;
 			while(!continue_button.isEnabled())
@@ -498,18 +563,20 @@ public class Example {
 				webdriver.findElement(By.cssSelector("#address-body a.overflow-address :nth-child("+i+")")).click();
 				Thread.sleep(1000);
 				
-			}
+			}*/
 			
 			
 			//Thread.sleep(2000);
 			
-
-			System.out.println("clicking pay button");
+			msg="clicking PROCEED TO PAY button";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.proceed_to_pay_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_pay_css)).click();
 			//Thread.sleep(10000);
 			
-			System.out.println("COD payment");
+			msg="selecting COD payment";
+			System.out.println(msg);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.COD_btn_css)));
 			//webdriver.findElement(By.cssSelector(UIobjects.COD_btn_css)).click();
 			Thread.sleep(1000);
@@ -518,7 +585,9 @@ public class Example {
 			int cod_flag=0;
 			if (webdriver.findElement(By.cssSelector("#codButton")).isDisplayed())
 				{
-					System.out.println("clicking on place order button");
+					msg="clicking on place order button";
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
 					webdriver.findElement(By.cssSelector("#codButton")).click();
 					cod_flag=1;
 				}
@@ -532,9 +601,21 @@ public class Example {
 				orderNo= webdriver.findElement(By.cssSelector("#order-cancel > div > section > p:nth-child(2) > span")).getText();
 				System.out.println(orderNo);
 			}
+			else
+			{
+				msg="something went wrong!! could't place COD order";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				write.writeReports("Log","FAIL",Driver.column);
+				write.writeReports("Error", msg,Driver.column);
+				Driver.FLAG=0;
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Driver.FLAG=0;
+			write.writeReports("Log","FAIL",Driver.column);
+			
 		}
 		
 		
