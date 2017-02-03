@@ -75,6 +75,7 @@ public class Driver {
 				int k=1;	
 				do
 				{
+					
 					actions = xl.read(i,j);
 					msg="Action"+k+": "+actions;
 					//System.out.println("inside Driver action name "+actions);
@@ -87,6 +88,8 @@ public class Driver {
 					//System.out.println(msg);
 								
 					try {
+						   // FLAG=0; // resetting the FLAG
+						   // System.out.println("Driver.FLAG value before executing the function "+FLAG);
 							Method method = baction.getClass().getMethod(actions);
 							method.invoke(baction);
 							
@@ -104,7 +107,8 @@ public class Driver {
 								failed_actions=failed_actions.concat(actions);// adding Action name to Result sheet in case of error
 								failed_actions=failed_actions+" ";
 							}
-							FLAG=0; // resetting the FLAG
+							//System.out.println("inside Driver : FLAG value after executing the function "+FLAG);
+							
 						} catch (Exception e) 
 						{
 							//e.printStackTrace();
@@ -120,6 +124,8 @@ public class Driver {
 					array.add("FAIL");
 				else
 					array.add("PASS");
+				
+				FLAG=0;//resetting the flag
 				
 				array.add(failed_actions);// adding failed action after the scenarios result
 				write.writeReports("Result", array);

@@ -84,29 +84,104 @@ public class BusinessAction {
 	public void login() {
 		
 		try {
-			System.out.println("maximing windows");
+			//System.out.println("maximing windows");
 			//spinner();
-			Thread.sleep(5);
-			WebElement login_name= webdriver.findElement(By.cssSelector(UIobjects.login_name_css));
-			act = new Actions(webdriver);
-			System.out.println("calling perform function");
-			//Thread.sleep(5);
-			act.moveToElement(login_name).build().perform();
-			webdriver.findElement(By.cssSelector(UIobjects.login_link_css)).click();
-			System.out.println("entering login details");
+			Thread.sleep(1000);
+			msg="trying to click on login link";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
+			
+			try {
+				WebElement login_name= webdriver.findElement(By.cssSelector(UIobjects.login_name_css));
+				act = new Actions(webdriver);
+				System.out.println("calling perform function");
+				//Thread.sleep(5);
+				act.moveToElement(login_name).build().perform();
+				webdriver.findElement(By.cssSelector(UIobjects.login_link_css)).click();
+			} catch (Exception e) {
+				e.printStackTrace();
+				Driver.FLAG=0;
+				write.writeReports("Log", "FAIL",Driver.column);
+				msg="couldn't find login link";
+				//write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Error", msg, Driver.column);
+				printException(e);
+			}
+			msg="entering login details";
+			System.out.println(msg);
+			write.writeReports("Log", msg, Driver.column);
 			
 			//ExcelRead xl= new ExcelRead("//home//styletag//java_test//Test Framework//src//com//styletag//test_cases//InputData.xlsx");
 			int no =xl.rowCountInSheet(1);
 			//System.out.println("total count "+no);
 			//System.out.println(xl.read(2, 0));
 			//System.out.println(xl.read(2, 1));
+			String emailid=xl.read(2, 0);
+			String pwd = xl.read(2, 1);
+			webdriver.findElement(By.cssSelector(UIobjects.login_email_css)).sendKeys(emailid);
+			webdriver.findElement(By.cssSelector(UIobjects.login_pass_css)).sendKeys(pwd);
+			msg= "emaild: "+emailid+" password: "+pwd;
 			
-			webdriver.findElement(By.cssSelector(UIobjects.login_email_css)).sendKeys(xl.read(2, 0));
-			webdriver.findElement(By.cssSelector(UIobjects.login_pass_css)).sendKeys(xl.read(2, 1));
-			webdriver.findElement(By.cssSelector(UIobjects.login_btn_css)).click();
+			WebElement login_button=webdriver.findElement(By.cssSelector(UIobjects.login_btn_css));
+			if (login_button.isEnabled())
+			{	
+				msg="clicking on login button";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				webdriver.findElement(By.cssSelector(UIobjects.login_btn_css)).click();
+				WebElement login_flash_msg=webdriver.findElement(By.cssSelector(UIobjects.login_flash_msg_css));
+				
+				if(login_flash_msg.isDisplayed())
+				{
+					System.out.println("inside if(login_flash_msg)");
+					
+					String text=login_flash_msg.getText();
+					System.out.println(text);
+					msg="flash message: "+text+" - displayed";
+					//if(text.contains("Successfully logged in "))
+					{
+						System.out.println("inside if(contains)");
+						System.out.println(msg);
+						write.writeReports("Log", msg,Driver.column);
+						Thread.sleep(1000);
+						WebElement acc_mem_name=webdriver.findElement(By.cssSelector(UIobjects.acc_name_css));
+						if(acc_mem_name.isDisplayed())
+						{
+							msg=acc_mem_name.getText()+" - displayed";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							Driver.FLAG++;
+							write.writeReports("Log", "PASS", Driver.column);
+							
+						}
+						else
+						{
+							Driver.FLAG=0;
+							msg="account name is not being displayed";
+							write.writeReports("Log","FAIL",Driver.column);
+							write.writeReports("Error", msg,Driver.column);
+						}
+						
+						
+					}
+					if(text.contains("Sorry! Invalid email/password combination. Please try again."))
+					{
+						System.out.println(msg);
+						write.writeReports("Log","FAIL",Driver.column);
+						write.writeReports("Error", msg,Driver.column);
+						Driver.FLAG=0;
+					}
+					
+				}
+				
+
+			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
+			Driver.FLAG=0;
+			write.writeReports("Log", "FAIL", Driver.column);
+			printException(e);
 		}
 			
 	}
@@ -156,13 +231,21 @@ public class BusinessAction {
 		write.writeReports("Log",msg,Driver.column);
 		
 		webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).sendKeys(search_keyword);
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e2) {
+			
+			e2.printStackTrace();
+		}
+		
 		webdriver.findElement(By.cssSelector(UIobjects.search_button_css)).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.page_title_css)));
+		/*wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.page_title_css)));
 		String title = webdriver.findElement(By.cssSelector(UIobjects.page_title_css)).getText();
 		msg=" Search page title: "+title;
 		System.out.println(msg);
 		write.writeReports("Log",msg,Driver.column);
-		
+		*/
 		wait=new WebDriverWait(webdriver,20);
 		WebElement product;
 		try {
@@ -173,6 +256,7 @@ public class BusinessAction {
 			sort(sort_value_int);
 			if(Driver.FLAG!=0)
 			{	Driver.FLAG++;
+				System.out.println("Driver.FLAG Value inside search function "+Driver.FLAG);
 				write.writeReports("Log", "PASS",Driver.column);
 			}
 							
@@ -942,8 +1026,8 @@ public class BusinessAction {
 					msg="clicking on place order button";
 					System.out.println(msg);
 					write.writeReports("Log",msg,Driver.column);
-					//webdriver.findElement(By.cssSelector("#codButton")).click();
-					//cod_flag=1;
+					webdriver.findElement(By.cssSelector("#codButton")).click();
+					cod_flag=1;
 				}
 			else
 				System.out.println("COD not available");
@@ -959,6 +1043,10 @@ public class BusinessAction {
 			{
 				orderNo= webdriver.findElement(By.cssSelector("#order-cancel > div > section > p:nth-child(2) > span")).getText();
 				System.out.println(orderNo);
+				msg= "Order Number: "+orderNo;
+				write.writeReports("Log", msg, Driver.column);
+				Driver.FLAG++;
+				write.writeReports("Log","PASS",Driver.column);
 			}
 			else
 			{
@@ -1002,7 +1090,7 @@ public class BusinessAction {
 	        Message message = new MimeMessage(session);
 	        message.setFrom(new InternetAddress("tabs@styletag.com"));//from address
 	        message.setRecipients(Message.RecipientType.TO,
-	                InternetAddress.parse("nethravathi.tc@styletag.com,sumit.kumar@styletag.com,rashmi.un@styletag.com "));//to address
+	                InternetAddress.parse("nethravathi.tc@styletag.com,prashanth.hn@styletag.com "));//to address
 	        message.setSubject("Sanity Report");
 	        message.setText("PFA for sanity reports");
 
@@ -1023,6 +1111,7 @@ public class BusinessAction {
 	        System.out.println("Sending");
 
 	        Transport.send(message);
+	        Driver.FLAG++;
 
 	        System.out.println("Done");
 

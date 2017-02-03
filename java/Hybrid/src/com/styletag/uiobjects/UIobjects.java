@@ -1,7 +1,7 @@
 package com.styletag.uiobjects;
 
 public class UIobjects {
-	//Home page
+	//Home page // login
 	public static String login_name_css ="#login-name";
 	public static String login_link_css = "#account-wrap > div > div:nth-child(1) > div > div > div:nth-child(4) > a.login-link";
 	public static String login_email_css = "#login_email";
@@ -9,6 +9,8 @@ public class UIobjects {
 	public static String login_btn_css= "#login-btn";
 	public static String acc_mem_name_id= "account-member-name";
 	public static String inner_logout_css = ".show-profile-inner-logout";
+	public static String login_flash_msg_css= "#non-footer > div:nth-child(2)";
+	public static String acc_name_css ="#account-member-name ";
 	
 	//search 
 	public static String search_field_css = "#aws_form_search > #appendedInputButtons";
