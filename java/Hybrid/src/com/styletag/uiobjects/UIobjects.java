@@ -39,6 +39,7 @@ public class UIobjects {
 	public static String continue_add_css = "#open-three";
 	public static String proceed_to_pay_css = ".proceed-pay-btn";
 	public static String COD_btn_css = "#cod-payment";
+	public static String credit_card_id="credit-card-payment";
 	
 	//menu items
 	public static String ethnicwear_id="ethnic-wear";

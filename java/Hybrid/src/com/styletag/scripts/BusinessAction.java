@@ -64,6 +64,7 @@ public class BusinessAction {
 		
 	}
 	
+	
 	public void launchStyletag(String url){
 		System.setProperty("webdriver.chrome.driver","../Hybrid//chromedriver");
 		webdriver = new ChromeDriver();
@@ -84,66 +85,198 @@ public class BusinessAction {
 	public void login() {
 		
 		try {
-			//System.out.println("maximing windows");
+			System.out.println("maximing windows");
 			//spinner();
-			Thread.sleep(1000);
-			msg="trying to click on login link";
+			Thread.sleep(5);
+			wait= new WebDriverWait(webdriver,10);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.login_name_css)));
+			WebElement login_name= webdriver.findElement(By.cssSelector(UIobjects.login_name_css));
+			act = new Actions(webdriver);
+			System.out.println("calling perform function");
+			//Thread.sleep(5);
+			act.moveToElement(login_name).build().perform();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.login_link_css)));
+			webdriver.findElement(By.cssSelector(UIobjects.login_link_css)).click();
+			System.out.println("entering login details");
+			
+			int no =xl.rowCountInSheet(1);// to set the sheet as well
+			//System.out.println("total count "+no);						
+			int i=2; String emailid,pwd;
+			String failed_data="";
+			WebElement emailid_textbox=webdriver.findElement(By.cssSelector(UIobjects.login_email_css));
+			WebElement pwd_textbox=webdriver.findElement(By.cssSelector(UIobjects.login_pass_css));
+			WebElement login_button=webdriver.findElement(By.cssSelector(UIobjects.login_btn_css));
+			
+			// for INVALID DATA
+			// Login Button should not be enabled for these data pattern
+			msg="checking Login Button disability";
 			System.out.println(msg);
 			write.writeReports("Log",msg,Driver.column);
-			
-			try {
-				WebElement login_name= webdriver.findElement(By.cssSelector(UIobjects.login_name_css));
-				act = new Actions(webdriver);
-				System.out.println("calling perform function");
-				//Thread.sleep(5);
-				act.moveToElement(login_name).build().perform();
-				webdriver.findElement(By.cssSelector(UIobjects.login_link_css)).click();
-			} catch (Exception e) {
-				e.printStackTrace();
-				Driver.FLAG=0;
-				write.writeReports("Log", "FAIL",Driver.column);
-				msg="couldn't find login link";
-				//write.writeReports("Log", msg,Driver.column);
-				write.writeReports("Error", msg, Driver.column);
-				printException(e);
-			}
-			msg="entering login details";
-			System.out.println(msg);
-			write.writeReports("Log", msg, Driver.column);
-			
-			//ExcelRead xl= new ExcelRead("//home//styletag//java_test//Test Framework//src//com//styletag//test_cases//InputData.xlsx");
-			int no =xl.rowCountInSheet(1);
-			//System.out.println("total count "+no);
-			//System.out.println(xl.read(2, 0));
-			//System.out.println(xl.read(2, 1));
-			String emailid=xl.read(2, 0);
-			String pwd = xl.read(2, 1);
-			webdriver.findElement(By.cssSelector(UIobjects.login_email_css)).sendKeys(emailid);
-			webdriver.findElement(By.cssSelector(UIobjects.login_pass_css)).sendKeys(pwd);
-			msg= "emaild: "+emailid+" password: "+pwd;
-			
-			WebElement login_button=webdriver.findElement(By.cssSelector(UIobjects.login_btn_css));
-			if (login_button.isEnabled())
+			while(!(xl.read(i,0)).equals("LoginButton enabled"))
 			{	
-				msg="clicking on login button";
-				System.out.println(msg);
-				write.writeReports("Log", msg,Driver.column);
-				webdriver.findElement(By.cssSelector(UIobjects.login_btn_css)).click();
-				WebElement login_flash_msg=webdriver.findElement(By.cssSelector(UIobjects.login_flash_msg_css));
+				System.out.println("Inside first while loop");
+				emailid=xl.read(i,0);
+				pwd=xl.read(i, 1);
+				System.out.println(i);
+				System.out.println("\nemailid: "+emailid+"  password: "+pwd);
 				
+				//Clear the text boxes;
+				emailid_textbox.clear();
+				pwd_textbox.clear();
+				
+				//enter data 
+				emailid_textbox.sendKeys(emailid);
+				pwd_textbox.sendKeys(pwd);
+				
+				Thread.sleep(500);
+				
+				if((login_button.isEnabled()))// FAIL if login button is enabled
+				{
+					System.out.println("i value is "+i+i);
+					msg="Login button enabled for following input";
+					System.out.println(msg);
+									
+					Driver.FLAG=0;
+					write.writeReports("Log","FAIL",Driver.column);
+					write.writeReports("Error",msg,Driver.column);
+					
+					msg="emailid: "+emailid+" pwd: "+pwd+"- fail";
+					write.writeReports("Log",msg,Driver.column);
+					write.writeReports("Error", msg, Driver.column);
+					System.out.println(msg);
+										
+				}
+				if(!(login_button.isEnabled()))
+				{
+					System.out.println("Login Button is not enabled");
+					msg="emaiid:"+emailid+" pwd:"+pwd+" - pass";
+					write.writeReports("Log",msg,Driver.column);
+					
+				}
+				i++;
+				
+			}
+						
+			i++; // to point to next row
+			
+			// Login Button will be enabled but login should not be successful
+			// this is for checking non valid data ie compared with DB
+			msg="Checking for Unsuccessful Login";
+			write.writeReports("Log",msg,Driver.column);
+			System.out.println(msg);
+			while(!(xl.read(i,0)).equals("Valid data"))
+			{	
+				
+				System.out.println("Inside second while");
+				emailid=xl.read(i,0);
+				pwd=xl.read(i, 1);
+				System.out.println(i);
+				System.out.println("\nemailid:  "+emailid+" password: "+pwd);
+				
+				//Clear the text boxes;
+				emailid_textbox.clear();
+				pwd_textbox.clear();
+				
+				//enter data 
+				emailid_textbox.sendKeys(emailid);
+				pwd_textbox.sendKeys(pwd);
+
+				
+				if(login_button.isEnabled())
+				{
+					System.out.println("\nLogin Button enabled and clicking on the button");
+					login_button.click();
+					Thread.sleep(2000);
+					WebElement login_flash_msg=webdriver.findElement(By.cssSelector(UIobjects.login_flash_msg_css));
+					if(login_flash_msg.isDisplayed())
+					{	
+						String text=login_flash_msg.getText();
+						String[] flash_msg_array=text.split("\n");
+					System.out.println("array value:"+flash_msg_array[0]+"end");
+					//System.out.println(text);
+						int flag=0;
+						if(!(flash_msg_array[0].equals("Sorry! Invalid email/password combination. Please try again.")))// Fail if() condition is true
+						{
+							System.out.println("inside if");
+						Driver.FLAG=0;
+						write.writeReports("Log","FAIL",Driver.column);
+						msg="emailid: "+emailid+" pwd: "+pwd;
+						write.writeReports("Error", msg,Driver.column);
+						System.out.println(msg);
+						
+						msg="Flash msg is: "+flash_msg_array[0];
+						write.writeReports("Error",msg,Driver.column);
+						System.out.println(msg);
+						flag=1;
+						}
+						if (flag!=1) // only to write pass to Log
+						{
+							msg="emailid: "+emailid+" pwd: "+pwd+" - pass";
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						System.out.println("inside else");
+						Driver.FLAG=0;
+						write.writeReports("Log","FAIL",Driver.column);
+						msg="emailid: "+emailid+" pwd: "+pwd+" - fail";
+						write.writeReports("Error", msg,Driver.column);
+						System.out.println(msg);
+						
+						msg="Flash msg 'Sorry! Invalid email/password combination. Please try again' is not displayed ";
+						write.writeReports("Error",msg,Driver.column);
+						System.out.println(msg);
+						
+					}
+					
+				
+				}i++;
+			}
+			
+			i++; // to point to next row
+			
+			// Checking for VALID DATA
+			//Login should be successful
+			msg="checking for Successful Login";
+			write.writeReports("Log",msg,Driver.column);
+			System.out.println(msg);
+			emailid=xl.read(i,0);
+			pwd=xl.read(i, 1);
+			
+			//Clear the text boxes;
+			emailid_textbox.clear();
+			pwd_textbox.clear();
+			
+			//enter data 
+			emailid_textbox.sendKeys(emailid);
+			pwd_textbox.sendKeys(pwd);
+			
+			if(login_button.isEnabled())
+			{
+				msg="emailid: "+emailid+" pwd"+pwd+" valid data";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				System.out.println("\nLogin Button enabled and clicking on the button");
+				login_button.click();
+				Thread.sleep(2000);
+				
+				WebElement login_flash_msg=webdriver.findElement(By.cssSelector(UIobjects.login_flash_msg_css));
 				if(login_flash_msg.isDisplayed())
 				{
-					System.out.println("inside if(login_flash_msg)");
 					
 					String text=login_flash_msg.getText();
-					System.out.println(text);
-					msg="flash message: "+text+" - displayed";
-					//if(text.contains("Successfully logged in "))
+					String[] array=text.split("\n");
+					//System.out.println("array value: "+array[0]);
+					msg="Flash is displayed ";
+					write.writeReports("Log", msg,Driver.column);
+					
+							
+					if((array[0].equals("Successfully logged in")))
 					{
-						System.out.println("inside if(contains)");
-						System.out.println(msg);
-						write.writeReports("Log", msg,Driver.column);
-						Thread.sleep(1000);
+						msg="Flash msg is: "+array[0];
+						write.writeReports("Log",msg,Driver.column);
+						
 						WebElement acc_mem_name=webdriver.findElement(By.cssSelector(UIobjects.acc_name_css));
 						if(acc_mem_name.isDisplayed())
 						{
@@ -152,38 +285,42 @@ public class BusinessAction {
 							write.writeReports("Log",msg,Driver.column);
 							Driver.FLAG++;
 							write.writeReports("Log", "PASS", Driver.column);
-							
-						}
-						else
+						
+						}else
 						{
 							Driver.FLAG=0;
 							msg="account name is not being displayed";
 							write.writeReports("Log","FAIL",Driver.column);
 							write.writeReports("Error", msg,Driver.column);
 						}
-						
-						
-					}
-					if(text.contains("Sorry! Invalid email/password combination. Please try again."))
+					}else
 					{
-						System.out.println(msg);
-						write.writeReports("Log","FAIL",Driver.column);
-						write.writeReports("Error", msg,Driver.column);
+						msg="Flash msg is not equal to 'Successfully logged in'";
 						Driver.FLAG=0;
+						write.writeReports("Log","FAIL",Driver.column);
+						write.writeReports("Error",msg,Driver.column);
 					}
 					
+				}else
+				{
+					System.out.println("Flash msg is not displayed");
+					
+					Driver.FLAG=0;
 				}
 				
-
+			}else
+			{
+				msg="Login Button is not enabled";
+				Driver.FLAG=0;
+				write.writeReports("Log", "FAIL",Driver.column);
+				write.writeReports("Error",msg,Driver.column);
 			}
+			
+	
 		} catch (Exception e) {
-			
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			Driver.FLAG=0;
-			write.writeReports("Log", "FAIL", Driver.column);
-			printException(e);
 		}
-			
 	}
 	
 	public void logout() throws InterruptedException{
@@ -1009,63 +1146,79 @@ public class BusinessAction {
 			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_pay_css)).click();
 			//Thread.sleep(10000);
 			
-			msg="selecting COD payment";
-			System.out.println(msg);
-			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.COD_btn_css)));
-			webdriver.findElement(By.cssSelector(UIobjects.COD_btn_css)).click();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			
-			System.out.println("COD payment");
-			int cod_flag=0;
-			if (webdriver.findElement(By.cssSelector("#codButton")).isDisplayed())
-				{
-					msg="clicking on place order button";
-					System.out.println(msg);
-					write.writeReports("Log",msg,Driver.column);
-					webdriver.findElement(By.cssSelector("#codButton")).click();
-					cod_flag=1;
-				}
-			else
-				System.out.println("COD not available");
-			
-			try {
-				Thread.sleep(250000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			if(cod_flag==1)
-			{
-				orderNo= webdriver.findElement(By.cssSelector("#order-cancel > div > section > p:nth-child(2) > span")).getText();
-				System.out.println(orderNo);
-				msg= "Order Number: "+orderNo;
-				write.writeReports("Log", msg, Driver.column);
-				Driver.FLAG++;
-				write.writeReports("Log","PASS",Driver.column);
-			}
-			else
-			{
-				msg="something went wrong!! could't place COD order";
-				System.out.println(msg);
-				write.writeReports("Log",msg,Driver.column);
-				write.writeReports("Log","FAIL",Driver.column);
-				write.writeReports("Error", msg,Driver.column);
-				Driver.FLAG=0;
-			}
-		} /*catch (InterruptedException e) {
+			/*catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Driver.FLAG=0;
 			write.writeReports("Log","FAIL",Driver.column);
 			
 		}*/
+		}
 				
 	}
+		
+public void orderCOD()
+{
+	
+	msg="selecting COD payment";
+	System.out.println(msg);
+	wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.COD_btn_css)));
+	webdriver.findElement(By.cssSelector(UIobjects.COD_btn_css)).click();
+	try {
+		Thread.sleep(1000);
+	} catch (InterruptedException e1) {
+		e1.printStackTrace();
+	}
+	
+	System.out.println("COD payment");
+	int cod_flag=0;
+	if (webdriver.findElement(By.cssSelector("#codButton")).isDisplayed())
+		{
+			msg="clicking on place order button";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
+			webdriver.findElement(By.cssSelector("#codButton")).click();
+			cod_flag=1;
+		}
+	else
+		System.out.println("COD not available");
+	
+	try {
+		Thread.sleep(1500);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	if(cod_flag==1)
+	{
+		orderNo= webdriver.findElement(By.cssSelector("#order-cancel > div > section > p:nth-child(2) > span")).getText();
+		System.out.println(orderNo);
+		msg= "Order Number: "+orderNo;
+		write.writeReports("Log", msg, Driver.column);
+		Driver.FLAG++;
+		write.writeReports("Log","PASS",Driver.column);
+	}
+	else
+	{
+		msg="something went wrong!! could't place COD order";
+		System.out.println(msg);
+		write.writeReports("Log",msg,Driver.column);
+		write.writeReports("Log","FAIL",Driver.column);
+		write.writeReports("Error", msg,Driver.column);
+		Driver.FLAG=0;
+	}
+
+	
+}
+public void orderCC()
+{
+	wait= new WebDriverWait(webdriver, 20);
+	
+	wait.until(ExpectedConditions.elementToBeClickable(By.id(UIobjects.credit_card_id)));
+	//webelement;
+	
+}
 	
 	public void emailReport()
 	{
@@ -1090,7 +1243,7 @@ public class BusinessAction {
 	        Message message = new MimeMessage(session);
 	        message.setFrom(new InternetAddress("tabs@styletag.com"));//from address
 	        message.setRecipients(Message.RecipientType.TO,
-	                InternetAddress.parse("nethravathi.tc@styletag.com,prashanth.hn@styletag.com "));//to address
+	                InternetAddress.parse("nethravathi.tc@styletag.com,sumit.kumar@styletag.com,rashmi.un@styletag.com"));//to address
 	        message.setSubject("Sanity Report");
 	        message.setText("PFA for sanity reports");
 

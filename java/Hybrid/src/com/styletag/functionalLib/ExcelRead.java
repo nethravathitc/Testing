@@ -22,6 +22,7 @@ public class ExcelRead {
 		
 	}
 	public int rowCountInSheet(int sheetNum){
+		System.out.println("SheetNUM is "+sheetNum);
 		sheet= wb.getSheetAt(sheetNum);
 		return sheet.getLastRowNum();
 	}

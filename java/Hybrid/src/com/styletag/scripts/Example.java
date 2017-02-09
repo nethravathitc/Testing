@@ -54,19 +54,19 @@ public class Example {
 		
 		Example ex = new Example();
 		
-		ex.launchStyletag("http://www.styletag.com");
+		ex.launchStyletag("http://origin-www.stest.in");
 		ex.login();
 		//ex.clearCart();
-		ex.addToCart();
+		//ex.addToCart();
 		//ex.search();
-		ex.productCatalogPage();
+		//ex.productCatalogPage();
 		
 		//ex.productCatalogPage2();
 		
 		//ex.applyFilters();
-		ex.productDetailPage();
-		ex.cartCheck();
-		ex.checkout();
+		//ex.productDetailPage();
+		//ex.cartCheck();
+		//ex.checkout();
 				
 	}
 	public void waitForSpinner(){
@@ -104,20 +104,177 @@ public class Example {
 			webdriver.findElement(By.cssSelector(UIobjects.login_link_css)).click();
 			System.out.println("entering login details");
 			
-			ExcelRead xl= new ExcelRead("//home//styletag//test-framework//java//src//com//styletag//scripts//Example.java//InputData.xlsx");
-			int no =xl.rowCountInSheet(1);
+			ExcelRead xl= new ExcelRead("//home//styletag//testing//java//Hybrid//src//com//styletag//testcases//InputData.xlsx");
+			int no =xl.rowCountInSheet(1);// to set the sheet as well
 			//System.out.println("total count "+no);
-			//System.out.println(xl.read(2, 0));
-			//System.out.println(xl.read(2, 1));
+						
+			int i=2; String emailid,pwd;
+			String failed_data="";
+			WebElement emailid_textbox=webdriver.findElement(By.cssSelector(UIobjects.login_email_css));
+			WebElement pwd_textbox=webdriver.findElement(By.cssSelector(UIobjects.login_pass_css));
+			WebElement login_button=webdriver.findElement(By.cssSelector(UIobjects.login_btn_css));
 			
-			webdriver.findElement(By.cssSelector(UIobjects.login_email_css)).sendKeys(xl.read(2, 0));
-			webdriver.findElement(By.cssSelector(UIobjects.login_pass_css)).sendKeys(xl.read(2, 1));
-			webdriver.findElement(By.cssSelector(UIobjects.login_btn_css)).click();
+			// for INVALID DATA
+			while(!(xl.read(i,0)).equals("LoginButton enabled"))
+			{	
+				System.out.println("Inside first while loop");
+				emailid=xl.read(i,0);
+				pwd=xl.read(i, 1);
+				System.out.println(i);
+				System.out.println("\nemailid: "+emailid+"  password: "+pwd);
+				
+				//Clear the text boxes;
+				emailid_textbox.clear();
+				pwd_textbox.clear();
+				
+				//enter data 
+				emailid_textbox.sendKeys(emailid);
+				pwd_textbox.sendKeys(pwd);
+				
+				Thread.sleep(500);
+				
+				if((login_button.isEnabled()))
+				{
+					msg="Login button enabled for following input";
+					failed_data=failed_data.concat(emailid);
+					failed_data=failed_data.concat(" ");
+					failed_data=failed_data.concat(pwd);
+					failed_data=failed_data.concat(" ");
+					Driver.FLAG=0;
+					write.writeReports("Log","FAIL",Driver.column);
+					write.writeReports("Error",msg,Driver.column);
+					
+					
+				}
+				if(!(login_button.isEnabled()))
+				{
+					System.out.println("Login Button is not enabled");
+					
+				}
+				i++;
+				
+			}
+			//System.out.println("After First while loop");
+			System.out.println("i value with which while broke"+i);
+			System.out.println("value at i"+xl.read(i,0));
+			i++; 
+			System.out.println("i value after incrementing :"+i);
+			emailid=xl.read(i,0);
+			pwd=xl.read(i, 1);
+			System.out.println("\nemailid:  "+emailid+" password: "+pwd);
+			
+		
+			
+			// to point to next row
+			// this is for checking non valid data ie compared with DB
+			while(!(xl.read(i,0)).equals("Valid data"))
+			{	System.out.println("Inside second while");
+				emailid=xl.read(i,0);
+				pwd=xl.read(i, 1);
+				System.out.println(i);
+				System.out.println("\nemailid:  "+emailid+" password: "+pwd);
+				
+				//Clear the text boxes;
+				emailid_textbox.clear();
+				pwd_textbox.clear();
+				
+				//enter data 
+				emailid_textbox.sendKeys(emailid);
+				pwd_textbox.sendKeys(pwd);
+
+				
+				if(login_button.isEnabled())
+				{
+					System.out.println("\nLogin Button enabled and clicking on the button");
+					login_button.click();
+					Thread.sleep(2000);
+					WebElement login_flash_msg=webdriver.findElement(By.cssSelector(UIobjects.login_flash_msg_css));
+					String text=login_flash_msg.getText();
+					String[] array=text.split("\n");
+					System.out.println("array value: "+array[0]);
+					for(String s:array)
+					{
+						System.out.println("inside for loop");
+						System.out.println(s+" ");
+					}
+					System.out.println(text);
+				
+					if(!(array[0].equals("Sorry! Invalid email/password combination. Please try again")))
+					{
+						Driver.FLAG=0;
+						write.writeReports("Log","FAIL",Driver.column);
+					}
+					
+				
+				}i++;
+			}
+			// to point to next row
+			i++;
+			
+			// Checking for VALID DATA
+			emailid=xl.read(i,0);
+			pwd=xl.read(i, 1);
+			
+			//Clear the text boxes;
+			emailid_textbox.clear();
+			pwd_textbox.clear();
+			
+			//enter data 
+			emailid_textbox.sendKeys(emailid);
+			pwd_textbox.sendKeys(pwd);
+			
+			if(login_button.isEnabled())
+			{
+				System.out.println("\nLogin Button enabled and clicking on the button");
+				login_button.click();
+				Thread.sleep(2000);
+				WebElement login_flash_msg=webdriver.findElement(By.cssSelector(UIobjects.login_flash_msg_css));
+				String text=login_flash_msg.getText();
+				String[] array=text.split("\n");
+				System.out.println("array value: "+array[0]);
+				for(String s:array)
+				{
+					System.out.println("inside for loop");
+					System.out.println(s+" ");
+				}
+				System.out.println(text);
+			
+				if((array[0].equals("Successfully logged in")))
+				{
+					System.out.println("Flash msg: "+array[0]+" is displayed");
+					WebElement acc_mem_name=webdriver.findElement(By.cssSelector(UIobjects.acc_name_css));
+					if(acc_mem_name.isDisplayed())
+					{
+						msg=acc_mem_name.getText()+" - displayed";
+						System.out.println(msg);
+						write.writeReports("Log",msg,Driver.column);
+						Driver.FLAG++;
+						write.writeReports("Log", "PASS", Driver.column);
+						
+					}
+					else
+					{
+						Driver.FLAG=0;
+						msg="account name is not being displayed";
+						write.writeReports("Log","FAIL",Driver.column);
+						write.writeReports("Error", msg,Driver.column);
+					}
+					
+				}
+				else
+				{
+					System.out.println("Flash msg is not displayed");
+					
+					Driver.FLAG=0;
+				}
+			}
+			
+	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		}
+	}
 	
 	public void clearCart() {
 		int cart_flag=0;
