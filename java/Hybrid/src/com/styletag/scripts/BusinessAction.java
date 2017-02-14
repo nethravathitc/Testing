@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -42,13 +43,17 @@ public class BusinessAction {
 	public WebDriver webdriver;
 	Actions act;
 	String pd_product_name ,ct_product_name,orderNo;
-	int sort_flag;
+	int sort_flag,COD_flag=0,CC_flag=0,DC_flag=0,NB_flag=0;
 	ExcelRead xl;
 	String msg;
 	ExcelWrite write;
 	DateFormat df;
 	Date dateobj;
 	String date;
+	//CartItem[] cartitems;
+	List<CartItem> cart_item_list= new ArrayList<CartItem>(); // declaring ArrayList of cart item
+	static int product_num=1;// 1 means first product in the listing page
+	String[] PD_product_name=new String[10];// declaring the size of PD_product_name array
 	public BusinessAction(ExcelWrite write1){
 		xl=new ExcelRead("..//Hybrid//src//com//styletag//testcases//InputData.xlsx");
 		write= write1;
@@ -666,22 +671,44 @@ public class BusinessAction {
 		int size_flag=0,size_presence_falg=0;
 		String parentBrowser = webdriver.getWindowHandle();// capturing parent tab browser.
 		
-		msg="selecting product";
+		msg="selecting the product"+product_num+" in listing page";
 		System.out.println(msg);
 		write.writeReports("Log",msg,Driver.column);
 		//write.writeReports("Log", "clicking on product", Driver.column);
 		
 		wait= new WebDriverWait(webdriver,10);
 		try {
-			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.product_css)));
-			webdriver.findElement(By.cssSelector(UIobjects.product_css)).click();
+			
+			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#product-container > div.ng-isolate-scope > ul > li:nth-child("+product_num+") > div > div.product-image > a > img")));
+			//System.out.println("css of the selected product is "+"#product-container > div.ng-isolate-scope > ul > li:nth-child("+product_num+") > div > div.product-image > a > img");
+			webdriver.findElement(By.cssSelector("#product-container > div.ng-isolate-scope > ul > li:nth-child("+product_num+") > div > div.product-image > a > img")).click();
 			msg="clicked on product";
 			System.out.println(msg);
 			write.writeReports("Log", msg,Driver.column);
 			
 			//get list of all tab browser
 			Set<String> allBrowser = webdriver.getWindowHandles();
+			
+			int n= allBrowser.size();
+			
+			System.out.println("the size of all Browser array is "+n);
+			
+			
+			System.out.println("names of Browsers\n");
+			String lastBrowser=null;
+			for(String eachBrowser:allBrowser)
+			{
+				System.out.println(eachBrowser);
+				lastBrowser=eachBrowser;
+			}
+			System.out.println("lastBrowser is: "+lastBrowser);
+			webdriver.switchTo().window(lastBrowser);
+			/*
+			int j=0;
+			System.out.println("switching browser");
 			for (String eachBrower:allBrowser){
+				//j++;
+				//System.out.println("Indside eachBrowser i value is "+j);
 				//System.out.println(eachBrower);
 					if(!(eachBrower.equals(parentBrowser)))
 					{
@@ -693,12 +720,12 @@ public class BusinessAction {
 						break;
 					}
 				}
-			
+			*/
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.product_title_css)));
 			pd_product_name = webdriver.findElement(By.cssSelector(UIobjects.product_title_css)).getText().toLowerCase();//product Name
 			msg="Product Name: "+pd_product_name;
 			System.out.println(msg);
-			write.writeReports("log",msg,Driver.column);
+			write.writeReports("Log",msg,Driver.column);
 			
 			msg="checking for size chart";
 			System.out.println(msg);
@@ -712,7 +739,7 @@ public class BusinessAction {
 				
 				msg="Variants Exist and selecting the size";
 				System.out.println(msg);
-				write.writeReports("log",msg,Driver.column);
+				write.writeReports("Log",msg,Driver.column);
 				
 				size_presence_falg=1;
 				for(int i=0;i<=7;i++)
@@ -760,6 +787,7 @@ public class BusinessAction {
 				
 				add_to_cart_button.click();
 				Thread.sleep(2000);
+				PD_product_name[product_num-1]=new String(pd_product_name); // adding the product name to the array
 				WebElement flash_msg= webdriver.findElement(By.cssSelector(UIobjects.flash_msg_css));
 				if (flash_msg.isDisplayed())
 				{	msg="Product added to cart ,'Added to Cart' msg displayed";
@@ -769,12 +797,15 @@ public class BusinessAction {
 				}
 				Driver.FLAG++;
 				write.writeReports("Log","PASS",Driver.column);
+				product_num++;  // incrementing the product_num to point to next product int he listing page if this function is called again;
+				System.out.println("product_num value "+product_num);
 			}
 			else
 			{
 				msg="ADD_TO_CART button is disabled";
 				System.out.println(msg);
 				write.writeReports("Log",msg,Driver.column);
+				
 				 
 				if((size_presence_falg==1)&&(size_flag==0)) // size chart present and not selected
 				{
@@ -787,13 +818,21 @@ public class BusinessAction {
 				}
 				else
 				{
+					PD_product_name[product_num-1]=new String(pd_product_name); // adding the product name to the array
 					msg="Product is already added to cart";
 					System.out.println(msg);
 					write.writeReports("Log",msg,Driver.column);
 					write.writeReports("Log", "PASS",Driver.column);
 					Driver.FLAG++;
+					product_num++; // incrementing the product_num to point to next product in the listing page if this function is called again;
+					System.out.println("product_num value "+product_num);
 				}
 				
+			}
+			System.out.println("Products names in PD page");
+			for(int j=0;j<product_num;j++)
+			{
+				System.out.println(PD_product_name[j]);
 			}
 			
 
@@ -866,6 +905,7 @@ public class BusinessAction {
 			System.out.println("scrolling down");
 			JavascriptExecutor js = (JavascriptExecutor)webdriver;
 			js.executeScript("window.scrollBy(0,100)","");
+			
 			
 			Driver.FLAG++;
 			write.writeReports("Log", "PASS",Driver.column);
@@ -990,8 +1030,108 @@ public class BusinessAction {
 				e1.printStackTrace();
 			}
 			
+			
+			List<WebElement> order_table_items=webdriver.findElements(By.cssSelector(UIobjects.order_table_items_css));
+			int order_table_items_count=order_table_items.size();
+			
+			msg="total no of line items in the cart is: "+order_table_items_count;
+			write.writeReports("Log", msg, Driver.column);
+			
+			//cartitems=new CartItem[order_table_items_count];// declaring the size of cartitems array
+			CartItem item;
+			System.out.println("order_table_items_count "+order_table_items_count);
+			int i=1;
+			for(WebElement eachElement:order_table_items)
+			{	//cartitems[i-1]=new CartItem();// creating the cart ieam object
+				item=new CartItem();
+			
+				String name=eachElement.findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(2) > p:nth-child(1) > a")).getText();//div:nth-child(2)- second column in the line-item row ie name of the product
+				System.out.println("#cart_product_"+i+" Name is "+name);
+				//cartitems[i-1].setName(name);
+				item.setName(name);
+				
+				//String quantity=eachElement.findElement(By.cssSelector(selector))
+				
+				String price_s=eachElement.findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(4) > p:nth-child(1) > span")).getText();
+				price_s=price_s.replaceAll("[^0-9]","");
+				int price_i=Integer.parseInt(price_s);
+				price_i=price_i/100;
+				System.out.println("Price is: "+price_i);
+				//cartitems[i-1].setPrice(price_i);
+				item.setPrice(price_i);
+				
+				String shipping_s=eachElement.findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(5) > p > span")).getText();
+				shipping_s=shipping_s.replaceAll("[^0-9]","");
+				int shipping_i= Integer.parseInt(shipping_s);
+				shipping_i=shipping_i/100;
+				System.out.println("Shipping charges: "+shipping_i);
+				//cartitems[i-1].setShipping(shipping_i);
+				item.setShipping(shipping_i);
+				
+				cart_item_list.add(item);
+				
+				//System.out.println("shipping charges from cartitems: "+cartitems[i-1].getShipping());
+				
+				i++;
+			}
+			/*System.out.println("\n values from cartitems object");
+			for(i=0;i<order_table_items_count;i++)
+			{
+				System.out.println("line item"+(i+1)+" Name: "+cartitems[i].getName()+", price: "+cartitems[i].getPrice()+", shipping: "+cartitems[i].getShipping());
+				
+			}*/
+			System.out.println("\nvalues from cartitems List");
+			msg="Products added to cart are:";
+			write.writeReports("Log", msg,Driver.column);
+			for(i=0;i<order_table_items_count;i++)
+			{
+				msg="Product Name: "+(cart_item_list.get(i)).getName();
+				write.writeReports("Log", msg, Driver.column);
+				System.out.println(msg);
+			}
+			// comparing the names of product whether products all produtcs added from PD is present in cart
+			System.out.println("\nprinting products in PD_product_name array");
+			String name1=null,name2=null;
+			int flag_added_item=0;
+			for( i=0;i<order_table_items_count;i++)
+			{
+				System.out.println("name "+PD_product_name[i].toLowerCase());
+				name1=(cart_item_list.get(i)).getName().toLowerCase();
+				name2=PD_product_name[i].toLowerCase().toLowerCase();
+				if(!(name1.equals(name2))) // this happen when products name mismatch
+				{
+					System.out.println("inside if and line level is "+i);
+					System.out.println("cart_item name:"+name1);
+					System.out.println("Product detail item name: "+name2);
+					flag_added_item=1; break;
+				}
+			}
+				
+			if(flag_added_item==0)
+			{
+				msg="products added to cart";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Log","PASS",Driver.column);
+				Driver.FLAG++;
+			}
+			else
+			{
+				msg="product is not added to cart";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Log", "FAIL",Driver.column);
+				msg="item level "+(i+1);
+				write.writeReports("Error",msg,Driver.column);
+				msg="cart_item name:"+name1+" Product detail item name: "+name2;
+				write.writeReports("Error", msg,Driver.column);
+				Driver.FLAG=0;
+			}
+			
+			
+			
 			try{
-				ct_product_name= webdriver.findElement(By.cssSelector(UIobjects.cartProduct1_css)).getText().toLowerCase();
+			/*	ct_product_name= webdriver.findElement(By.cssSelector(UIobjects.cartProduct1_css)).getText().toLowerCase();
 			if(pd_product_name.equals(ct_product_name))
 			{
 				msg="product is added to cart";
@@ -1007,7 +1147,7 @@ public class BusinessAction {
 				write.writeReports("Log", msg,Driver.column);
 				write.writeReports("Log", "FAIL",Driver.column);
 				Driver.FLAG=0;
-			}
+			}*/
 		} catch (Exception e) {// control comes here if it couldn't find ct_product_name
 			
 			e.printStackTrace();
@@ -1171,30 +1311,31 @@ public void orderCOD()
 	}
 	
 	System.out.println("COD payment");
-	int cod_flag=0;
+	
 	if (webdriver.findElement(By.cssSelector("#codButton")).isDisplayed())
 		{
 			msg="clicking on place order button";
 			System.out.println(msg);
 			write.writeReports("Log",msg,Driver.column);
 			webdriver.findElement(By.cssSelector("#codButton")).click();
-			cod_flag=1;
+			COD_flag=1;
 		}
 	else
 		System.out.println("COD not available");
 	
 	try {
-		Thread.sleep(1500);
+		Thread.sleep(100);
 	} catch (InterruptedException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	
-	if(cod_flag==1)
+	if(COD_flag==1)
 	{
 		orderNo= webdriver.findElement(By.cssSelector("#order-cancel > div > section > p:nth-child(2) > span")).getText();
 		System.out.println(orderNo);
 		msg= "Order Number: "+orderNo;
+		System.out.println(msg);
 		write.writeReports("Log", msg, Driver.column);
 		Driver.FLAG++;
 		write.writeReports("Log","PASS",Driver.column);
@@ -1209,6 +1350,10 @@ public void orderCOD()
 		Driver.FLAG=0;
 	}
 
+	
+}
+public void confirmationPage()
+{
 	
 }
 public void orderCC()
@@ -1243,8 +1388,8 @@ public void orderCC()
 	        Message message = new MimeMessage(session);
 	        message.setFrom(new InternetAddress("tabs@styletag.com"));//from address
 	        message.setRecipients(Message.RecipientType.TO,
-	                InternetAddress.parse("nethravathi.tc@styletag.com,sumit.kumar@styletag.com,rashmi.un@styletag.com"));//to address
-	        message.setSubject("Sanity Report");
+	                InternetAddress.parse("nethravathi.tc@styletag.com,sumit.kumar@styletag.com,rashmi.un@styletag.com,siddesh.sh@styletag.com"));//to address
+	        message.setSubject("Sanity Test Report");
 	        message.setText("PFA for sanity reports");
 
 	        MimeBodyPart messageBodyPart = new MimeBodyPart();

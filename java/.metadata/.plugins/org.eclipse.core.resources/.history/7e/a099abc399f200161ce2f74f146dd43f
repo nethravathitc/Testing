@@ -1,0 +1,5 @@
+package com.styletag.scripts;
+
+public class CartItem {
+
+}

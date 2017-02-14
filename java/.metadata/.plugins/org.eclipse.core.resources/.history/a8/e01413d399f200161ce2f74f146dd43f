@@ -1,0 +1,16 @@
+package com.styletag.scripts;
+
+public class CartItem {
+	String name;
+	int quantity;
+	int price;
+	int shipping;
+void setName(String productname)
+{
+	name=productname;
+}
+void setprice(String productprice)
+{
+	price=productprice;
+}
+}

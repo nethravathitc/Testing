@@ -29,6 +29,7 @@ public class UIobjects {
 	//cart page
 	public static String cartProduct1_css="#cart_product_1 > div:nth-child(2) > p:nth-child(1) > a";
 	public static String proceed_to_checkout_button_css = "#cart-checkout-btn";
+	public static String order_table_items_css="#orders-information-table > div.orders-tbody > div";
 	
 	//checkout page
 	public static String user_loggedin_emailid="#auth-body > div > div:nth-child(1) > p.font-16 > strong";
