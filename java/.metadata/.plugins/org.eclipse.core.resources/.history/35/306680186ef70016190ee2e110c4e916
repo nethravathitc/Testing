@@ -1410,8 +1410,7 @@ public void clearCartItems()
 		} catch (Exception e) {
 			e.printStackTrace();
 			Driver.FLAG=0;
-			write.writeReports("Log", "FAIL", Driver.column);
-			printException(e);
+			write.writeReports("Log", msg, Driver.column);
 		}
 	}
 		//System.out.println("last item in the list: "+(order_table_items.get(1)).getText());
@@ -1421,8 +1420,6 @@ public void clearCartItems()
 	PD_product_name=new String[10];
 	product_num=1;// resetting the product count
 	System.out.println("length of cart_item_list"+cart_item_list.size());
-	Driver.FLAG++;
-	write.writeReports("Log","PASS", Driver.column);
 	
 }
 public void confirmationPage()

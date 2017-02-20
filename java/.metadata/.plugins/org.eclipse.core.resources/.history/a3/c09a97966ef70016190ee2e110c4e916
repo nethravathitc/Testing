@@ -20,7 +20,7 @@ public class Driver {
 		String execution_flag,actions,msg,failed_actions="";
 		ArrayList<String> array = new ArrayList<String>();
 		
-		url="http://origin-www2.stest.in";
+		url="http://www.styletag.com";
 		ExcelWrite write= new ExcelWrite();
 		BusinessAction baction= new BusinessAction(write);
 		
