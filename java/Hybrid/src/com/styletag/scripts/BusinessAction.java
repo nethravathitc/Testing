@@ -51,9 +51,9 @@ public class BusinessAction {
 	Date dateobj;
 	String date;
 	//CartItem[] cartitems;
-	List<CartItem> cart_item_list= new ArrayList<CartItem>(); // declaring ArrayList of cart item
+	public List<CartItem> cart_item_list= new ArrayList<CartItem>(); // declaring ArrayList of cart item. needs reset for new senario - done in Driver class
 	static int product_num=1;// 1 means first product in the listing page
-	String[] PD_product_name=new String[10];// declaring the size of PD_product_name array
+	public String[] PD_product_name=new String[10];// declaring the size of PD_product_name array. needs reset for new senario - done in Driver class
 	public BusinessAction(ExcelWrite write1){
 		xl=new ExcelRead("..//Hybrid//src//com//styletag//testcases//InputData.xlsx");
 		write= write1;
@@ -1350,6 +1350,70 @@ public void orderCOD()
 		Driver.FLAG=0;
 	}
 
+	
+}
+public void clearCartItems()
+{
+	try {
+		Thread.sleep(500);
+	} catch (InterruptedException e1) {
+		
+		e1.printStackTrace();
+	}
+	
+	msg="Clicking on minicart";
+	System.out.println(msg);
+	write.writeReports("Log", msg,Driver.column);
+	
+	webdriver.findElement(By.cssSelector(UIobjects.minicart_css)).click();
+	
+	try {
+		Thread.sleep(3000);
+	} catch (InterruptedException e1) {
+		
+		e1.printStackTrace();
+	}
+	
+	
+	List<WebElement> order_table_items=webdriver.findElements(By.cssSelector(UIobjects.order_table_items_css));
+	int order_table_items_count=order_table_items.size();
+	
+	msg="total no of line items in the cart is: "+order_table_items_count;
+	System.out.println(msg);
+	write.writeReports("Log", msg, Driver.column);
+	
+	//cartitems=new CartItem[order_table_items_count];// declaring the size of cartitems array
+	//CartItem item;
+	//System.out.println("order_table_items_count "+order_table_items_count);
+	int i=1;
+
+	System.out.println("\nlist items");
+	i=order_table_items_count;
+	for(int j=1;j<=order_table_items_count;j++)
+	{
+		String name=(order_table_items.get(i-1)).findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(2) > p:nth-child(1) > a")).getText();
+		msg="product name: "+name;
+		System.out.println(msg);
+		write.writeReports("Log", msg,Driver.column);
+		WebElement remove=(order_table_items.get(i-1)).findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(2) > div > a"));// i is required to access list element becoz list indexing starts from '0' 
+		msg="clicking on remove button of line item"+i;
+		System.out.println(msg);
+		write.writeReports("Log", msg,Driver.column);
+		remove.click();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		i--;
+	}
+	//System.out.println("last item in the list: "+(order_table_items.get(1)).getText());
+	//removing the items from list
+	cart_item_list.removeAll(cart_item_list);
+	// clear the product names in the PD_
+	PD_product_name=new String[10];
+	product_num=1;// resetting the product count
+	System.out.println("length of cart_item_list"+cart_item_list.size());
 	
 }
 public void confirmationPage()

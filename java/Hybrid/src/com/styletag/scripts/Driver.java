@@ -20,7 +20,7 @@ public class Driver {
 		String execution_flag,actions,msg,failed_actions="";
 		ArrayList<String> array = new ArrayList<String>();
 		
-		url="http://www.styletag.com";
+		url="http://origin-www2.stest.in";
 		ExcelWrite write= new ExcelWrite();
 		BusinessAction baction= new BusinessAction(write);
 		
@@ -79,7 +79,7 @@ public class Driver {
 					
 					actions = xl.read(i,j);
 					msg="Action"+k+": "+actions;
-					//System.out.println("inside Driver action name "+actions);
+					System.out.println("\n"+msg);
 					if(!actions.equals(""))
 					{
 						write.writeReports("Log", msg,column);
@@ -137,6 +137,7 @@ public class Driver {
 			}
 			i++;
 			array.removeAll(array);// to remove the previous entry in the list, otherwise this list will store all the strings
+			//baction.cart_item_list.removeAll(baction.cart_item_list); // resetting these variables for next scenario execution
 		}
 		}catch(Exception e)
 		{
