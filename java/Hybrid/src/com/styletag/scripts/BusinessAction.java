@@ -33,6 +33,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.styletag.functionalLib.*;
@@ -325,6 +326,10 @@ public class BusinessAction {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Driver.FLAG=0;
+			write.writeReports("Log", "FAIL",Driver.column);
+			write.writeReports("Error",msg,Driver.column);
+			printException(e);
 		}
 	}
 	
@@ -1008,6 +1013,7 @@ public class BusinessAction {
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				
 			}
 		}
 	}
@@ -1050,7 +1056,17 @@ public class BusinessAction {
 				//cartitems[i-1].setName(name);
 				item.setName(name);
 				
+				String size_s=eachElement.findElement(By.cssSelector("#cart_product_"+i+"> div:nth-child(2) > p.ng-binding")).getText();
+				System.out.println("size"+size_s);
+				item.setSize(size_s);
+				
 				//String quantity=eachElement.findElement(By.cssSelector(selector))
+				Select se=new Select(webdriver.findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(3) > label > select")));
+				WebElement option = se.getFirstSelectedOption();
+				String qty_s=option.getText();
+				int qty_i=Integer.parseInt(qty_s);
+				System.out.println("quantity of product"+i+"is: "+qty_i);
+				item.setQuantity(qty_i);
 				
 				String price_s=eachElement.findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(4) > p:nth-child(1) > span")).getText();
 				price_s=price_s.replaceAll("[^0-9]","");
@@ -1059,6 +1075,7 @@ public class BusinessAction {
 				System.out.println("Price is: "+price_i);
 				//cartitems[i-1].setPrice(price_i);
 				item.setPrice(price_i);
+				
 				
 				String shipping_s=eachElement.findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(5) > p > span")).getText();
 				shipping_s=shipping_s.replaceAll("[^0-9]","");
@@ -1160,7 +1177,7 @@ public class BusinessAction {
 	}	
 	
 	public void checkout() {
-		//try
+		try
 		{
 			
 			wait=new WebDriverWait(webdriver, 50);
@@ -1176,7 +1193,7 @@ public class BusinessAction {
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.proceed_to_checkout_button_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_checkout_button_css)).click();
 			//Thread.sleep(4000);
-			
+			/* email step has been removed.
 			String user_logged_in_email=webdriver.findElement(By.cssSelector(UIobjects.user_loggedin_emailid)).getText();
 			if(!(user_logged_in_email.equals("")))
 			{
@@ -1205,7 +1222,7 @@ public class BusinessAction {
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.continue_email_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.continue_email_css)).click();
 			
-			
+			*/
 			msg="selecting address";
 			System.out.println(msg);
 			write.writeReports("Log", msg,Driver.column);
@@ -1293,6 +1310,11 @@ public class BusinessAction {
 			write.writeReports("Log","FAIL",Driver.column);
 			
 		}*/
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			Driver.FLAG=0;
+			write.writeReports("Log","FAIL",Driver.column);
 		}
 				
 	}
@@ -1300,54 +1322,59 @@ public class BusinessAction {
 public void orderCOD()
 {
 	
-	msg="selecting COD payment";
-	System.out.println(msg);
-	wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.COD_btn_css)));
-	webdriver.findElement(By.cssSelector(UIobjects.COD_btn_css)).click();
 	try {
-		Thread.sleep(1000);
-	} catch (InterruptedException e1) {
-		e1.printStackTrace();
-	}
-	
-	System.out.println("COD payment");
-	
-	if (webdriver.findElement(By.cssSelector("#codButton")).isDisplayed())
+		msg="selecting COD payment";
+		System.out.println(msg);
+		wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.COD_btn_css)));
+		webdriver.findElement(By.cssSelector(UIobjects.COD_btn_css)).click();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
+		System.out.println("COD payment");
+		
+		if (webdriver.findElement(By.cssSelector("#codButton")).isDisplayed())
+			{
+				msg="clicking on place order button";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				webdriver.findElement(By.cssSelector("#codButton")).click();
+				COD_flag=1;
+			}
+		else
+			System.out.println("COD not available");
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(COD_flag==1)
 		{
-			msg="clicking on place order button";
+			orderNo= webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-inner-header > div.bit-2.padding-zero.pull-left.text-left > p.text-uppercase.margin-th-each > strong")).getText();
+			System.out.println(orderNo);
+			msg= "Order Number: "+orderNo;
+			System.out.println(msg);
+			write.writeReports("Log", msg, Driver.column);
+			Driver.FLAG++;
+			write.writeReports("Log","PASS",Driver.column);
+		}
+		else
+		{
+			msg="something went wrong!! could't place COD order";
 			System.out.println(msg);
 			write.writeReports("Log",msg,Driver.column);
-			webdriver.findElement(By.cssSelector("#codButton")).click();
-			COD_flag=1;
+			write.writeReports("Log","FAIL",Driver.column);
+			write.writeReports("Error", msg,Driver.column);
+			Driver.FLAG=0;
+			//String text=webdriver.findElement(By.cssSelector("#cod-pp > div:nth-child(2) > p"))
 		}
-	else
-		System.out.println("COD not available");
-	
-	try {
-		Thread.sleep(100);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	
-	if(COD_flag==1)
-	{
-		orderNo= webdriver.findElement(By.cssSelector("#order-cancel > div > section > p:nth-child(2) > span")).getText();
-		System.out.println(orderNo);
-		msg= "Order Number: "+orderNo;
-		System.out.println(msg);
-		write.writeReports("Log", msg, Driver.column);
-		Driver.FLAG++;
-		write.writeReports("Log","PASS",Driver.column);
-	}
-	else
-	{
-		msg="something went wrong!! could't place COD order";
-		System.out.println(msg);
-		write.writeReports("Log",msg,Driver.column);
-		write.writeReports("Log","FAIL",Driver.column);
-		write.writeReports("Error", msg,Driver.column);
-		Driver.FLAG=0;
+	} catch (Exception e) {
+				e.printStackTrace();
 	}
 
 	
@@ -1427,6 +1454,183 @@ public void clearCartItems()
 }
 public void confirmationPage()
 {
+	try {
+		
+		Thread.sleep(1000);
+		String current_URL=webdriver.getCurrentUrl();
+		System.out.println("current URL"+current_URL);
+		
+		String URL_Rno=current_URL.replaceAll("[^0-9]", "");
+		System.out.println("URL Rnum: "+URL_Rno);
+		
+		String[] URL_array=current_URL.split("/");
+		System.out.println("ULR_array_size: "+URL_array.length);
+		System.out.println("URL elements:");
+		for(String s:URL_array)
+		{
+			System.out.println(s+"\n");
+		}
+		System.out.println("4th element in URL_array:"+URL_array[4]);
+		
+		String URL_array4 =URL_array[4].replaceAll("[^a-z]", " ");
+		System.out.println("array4 elements are after replace with underscore: "+URL_array4);
+		String[] array_split=URL_array4.split(" ");
+		System.out.println("array_split elements are:");
+		for(String s:array_split)
+		{
+			System.out.println("srray1:"+s);
+		}
+		String status=array_split[2];
+		System.out.println("status is :"+status);
+		
+		
+		if(COD_flag==1)
+		{
+				if(status.equals("complete"))
+				{
+					System.out.println("URL pattern is correct with 'status=complete'");
+					try{
+						String header_msg=webdriver.findElement(By.cssSelector("#thanku_header")).getText();
+						System.out.println("header msg "+header_msg);
+						if(header_msg.equals("THANK YOU FOR YOUR ORDER"))
+						{
+							System.out.println("cofirmation msg is correct: "+header_msg);
+						}
+					}
+					catch(Exception e)
+					{
+						Driver.FLAG=0;
+						System.out.println("No Confirmation message");
+					}
+								
+				}
+				else
+				{
+					System.out.println("order is successfull but error in status");
+					System.out.println("status is: "+status);
+					Driver.FLAG=0;
+				}
+		}
+		//order no below confirmation page
+		String orderNo1=webdriver.findElement(By.cssSelector("#order-complete > div > section > p.font-14 > span")).getText();
+		System.out.println("second order no is:"+orderNo1);
+		orderNo1=orderNo1.replaceAll("[^0-9]","");
+		System.out.println("orderNo1 after replace all"+orderNo1);
+		
+		
+		// checking header in the confirmation order table page
+		//comparing the order number b/w url vs tablelist vs head
+		String orderNo2=webdriver.findElement(By.xpath("//*[@id='order-complete']/div/section/p[2]/span")).getText();
+		//orderNo= webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-inner-header > div.bit-2.padding-zero.pull-left.text-left > p.text-uppercase.margin-th-each > strong")).getText();
+		System.out.println("order no: "+orderNo2);
+		orderNo2=orderNo2.replaceAll("[^0-9]", "");
+		System.out.println("orderNo1 after replacement"+orderNo2);
+		if(URL_Rno.equals(orderNo1))
+		{
+			if(orderNo1.equals(orderNo2))
+			{
+				System.out.println("all Order Bumbers are matching");
+			}
+			else
+			{
+				System.out.println("header order number doesnot match with table order number");
+				Driver.FLAG=0;
+			}
+		}
+		else
+		{
+			System.out.println("URL_order no doesnt match header order number");
+			Driver.FLAG=0;
+		}
+		
+		
+		
+		
+		String item_qty_s=webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-inner-header > div.bit-2.padding-zero.pull-left.text-left > p:nth-child(2)")).getText();
+		System.out.println("item_qty: "+item_qty_s);
+		item_qty_s=item_qty_s.replaceAll("[^0-9]", "");
+		int item_qty_i=Integer.parseInt(item_qty_s);
+		System.out.println("item_qty_i"+item_qty_i);
+		
+		
+		String order_date_s=webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-inner-header > div.bit-2.padding-zero.pull-left.text-left > p.margin-th-each.col-666.ng-binding")).getText();
+		System.out.println("order_date_s:"+order_date_s);
+		
+		String total_amt_s=webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-inner-header > div.bit-2.padding-zero.pull-right.text-right > p.text-capitalize.margin-th-each > strong")).getText();
+		System.out.println("total amount_s: "+total_amt_s);
+		
+		String payment_mode=webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-inner-header > div.bit-2.padding-zero.pull-right.text-right > p.text-capitalize.payment-mode > strong")).getText();
+		System.out.println("Payment mode: "+payment_mode);
+		
+		String product_name= webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-rows > div.thanku-row-wrap.ng-scope > div.ng-scope > div.order-image-details.bit-2-left-th.padding-zero.pull-left.text-left > div:nth-child(2) > p:nth-child(1) > a")).getText();
+		System.out.println("product name: "+product_name);
+		
+		String product_price=webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-rows > div.thanku-row-wrap.ng-scope > div.ng-scope > div.order-image-details.bit-2-left-th.padding-zero.pull-left.text-left > div:nth-child(2) > p:nth-child(3)")).getText();
+		System.out.println("product price:"+product_price);
+		
+		//Extracting the items information
+				
+		List<WebElement> confirm_order_list = webdriver.findElements(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-rows>div"));
+		int confirm_order_list_count = confirm_order_list.size();
+		System.out.println("Confirm_order_list size"+confirm_order_list_count);
+		int cart_item_count=cart_item_list.size();
+		System.out.println("cart_item_count:"+cart_item_count);
+		
+		//comapring total items from cart with totalitems in confirmation page
+		if((confirm_order_list_count-1)==cart_item_count) //(confirm_order-1)becoz list includes last row that has address details
+		{
+			System.out.println("cart item count is equal to confirmation item count");
+			if((confirm_order_list_count-1)==item_qty_i)
+			{
+				System.out.println("'Item' attribute match with total no of items in the page");
+			}
+			else
+			{
+				System.out.println("'Item' attribute doesnt not match with total no of items in the page");
+				Driver.FLAG=0;
+			}
+		}
+		else{
+			System.out.println("cart item count is not equal to confirmation page item count!!");
+			Driver.FLAG=0;
+		}
+						
+		System.out.println("\n ");
+		for(int i=1;i<confirm_order_list_count;i++)
+		{
+			String product_name1=webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-rows > div:nth-child("+i+") > div.ng-scope > div.order-image-details.bit-2-left-th.padding-zero.pull-left.text-left > div:nth-child(2) > p:nth-child(1) > a")).getText();
+			System.out.println("product name: "+product_name1);
+			
+			String size_s=webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-rows > div.thanku-row-wrap.ng-scope > div.ng-scope > div.order-image-details.bit-2-left-th.padding-zero.pull-left.text-left > div:nth-child(2) > p:nth-child(2)")).getText();
+			System.out.println("size is: "+size_s);
+			String[] size=size_s.split(" ");
+			System.out.println("size array is:");
+			for(String s:size)
+			{
+				System.out.println(s+"\n");
+			}
+			
+			String price = webdriver.findElement(By.cssSelector("#order-body > div.mainthanku-repeat-wrap > div.thanku-rows > div.thanku-row-wrap.ng-scope > div.ng-scope > div.order-image-details.bit-2-left-th.padding-zero.pull-left.text-left > div:nth-child(2) > p:nth-child(3)")).getText();
+			System.out.println("price: "+price);
+			price=price.replaceAll("[^0-9]", "");
+			int price_i=Integer.parseInt(price);
+			price_i=price_i/100;
+			System.out.println("int price: "+price_i);
+			
+			
+			//System.out.println("inside for loop, product name: "+product_name1);
+			
+			//String price=webdriver.findElement(By.cssSelector(""));
+		}
+		
+		
+		
+	
+	
+	} catch (Exception e) {
+		
+		e.printStackTrace();
+	}
 	
 }
 public void orderCC()

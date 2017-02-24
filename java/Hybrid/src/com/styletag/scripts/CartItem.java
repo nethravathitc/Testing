@@ -5,6 +5,7 @@ public class CartItem {
 	int quantity;
 	int price;
 	int shipping;
+	String size;
 public void setName(String productname)
 {
 	name=productname;
@@ -21,6 +22,14 @@ public void setPrice(int productprice)
 public void setShipping(int productshipping)
 {
 	shipping=productshipping;
+}
+public void setSize(String productsize)
+{
+	size=productsize;
+}
+public String getSize()
+{
+	return size;
 }
 public String getName()
 {
