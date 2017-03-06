@@ -93,7 +93,12 @@ public class BusinessAction {
 		try {
 			System.out.println("maximing windows");
 			//spinner();
-			Thread.sleep(5);
+			Thread.sleep(3500);//it is required to get rid of flash msg. ex: if login happen as soon as logout flash msg hides the required UI element
+			String  URL1 = webdriver.getCurrentUrl();
+			msg="current page is: "+"'"+URL1+"'";
+			System.out.println(msg);
+			//write.writeReports("Log",msg, Driver.column);
+						
 			wait= new WebDriverWait(webdriver,10);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.login_name_css)));
 			WebElement login_name= webdriver.findElement(By.cssSelector(UIobjects.login_name_css));
@@ -299,6 +304,57 @@ public class BusinessAction {
 							write.writeReports("Log","FAIL",Driver.column);
 							write.writeReports("Error", msg,Driver.column);
 						}
+						
+						Thread.sleep(3000);// this required for the URL to change if in case
+						
+						String URL2=webdriver.getCurrentUrl();
+						msg="current page is: "+"'"+URL2+"'";
+						System.out.println(msg);
+						//write.writeReports("Log",msg, Driver.column);
+						
+						
+						if(URL1.contains("email"))// checking login at checkout/email page
+						{
+							if(URL2.contains("address")) // should be redirected to ../address page
+							{
+								msg="Redirected to the correct page ";
+								write.writeReports("Log",msg, Driver.column);
+							}
+							else
+							{
+								msg="Redirection didnt happened to correct page";
+								write.writeReports("Log", msg, Driver.column);
+								write.writeReports("Log","FAIL", Driver.column);
+								write.writeReports("Error",msg,Driver.column);
+								msg="URL before Login: '"+URL1+"'";
+								write.writeReports("Error", msg, Driver.column);
+								msg="URL after Login: '"+URL2+"'";
+								write.writeReports("Error",msg, Driver.column);
+							}
+							
+						}
+						else
+						{
+							if(URL1.equals(URL2))
+							{
+								msg="Redirected to the correct page ";
+								write.writeReports("Log",msg, Driver.column);
+							}
+							else
+							{
+								msg="Redirection didnt happened to correct page";
+								write.writeReports("Log", msg, Driver.column);
+								write.writeReports("Log","FAIL", Driver.column);
+								write.writeReports("Error",msg,Driver.column);
+								msg="URL before Login: '"+URL1+"'";
+								write.writeReports("Error", msg, Driver.column);
+								msg="URL after Login: '"+URL2+"'";
+								write.writeReports("Error",msg, Driver.column);
+							}
+						}
+						
+						
+						
 					}else
 					{
 						msg="Flash msg is not equal to 'Successfully logged in'";
@@ -322,6 +378,7 @@ public class BusinessAction {
 				write.writeReports("Error",msg,Driver.column);
 			}
 			
+			
 	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -334,94 +391,132 @@ public class BusinessAction {
 	}
 	
 	public void logout() throws InterruptedException{
-		//Thread.sleep(10);
-		System.out.println("User logging out ");
-		wait = new WebDriverWait(webdriver,50);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(UIobjects.acc_mem_name_id)));
-		WebElement menu = webdriver.findElement(By.id(UIobjects.acc_mem_name_id));
-		new Actions(webdriver).moveToElement(menu).build().perform();
-		Thread.sleep(2000);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.inner_logout_css)));
-		webdriver.findElement(By.cssSelector(UIobjects.inner_logout_css)).click();
-		//Thread.sleep(5000);
-		webdriver.quit();
+		try {
+			Thread.sleep(3500); // it is required to get rid of flash msg. ex: if logout happen as soon as login flash msg hides the required UI element.
+			msg="User logging out ";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
+
+			wait = new WebDriverWait(webdriver,50);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(UIobjects.acc_mem_name_id)));
+			WebElement menu = webdriver.findElement(By.id(UIobjects.acc_mem_name_id));
+			new Actions(webdriver).moveToElement(menu).build().perform();
+			System.out.println("calling perform function");
+			Thread.sleep(2000);
+			msg="clicking on logout link";
+			System.out.println(msg);
+			write.writeReports("Log", msg, Driver.column);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.inner_logout_css)));
+			webdriver.findElement(By.cssSelector(UIobjects.inner_logout_css)).click();
+			write.writeReports("Log","PASS", Driver.column);
+			Thread.sleep(5000);// this is required for the wait till flash messages goes off
+			String url=webdriver.getCurrentUrl();
+			if(url.equals(Driver.HOME_URL))
+			{
+				msg="Redirected to HOME page";
+				write.writeReports("Log",msg, Driver.column);
+				System.out.println(msg);
+				write.writeReports("Log", "PASS", Driver.column);
+			}
+			else
+			{
+				msg="Redirection didnot happen to HOME page";
+				System.out.println(msg);
+				write.writeReports("Log",msg, Driver.column);
+				write.writeReports("Log","FAIL", Driver.column);
+				write.writeReports("Error",msg, Driver.column);
+				msg="current URL: '"+url+"'";
+				write.writeReports("Error", msg, Driver.column);
+				System.out.println(msg);
+				Driver.FLAG=0;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Driver.FLAG=0;
+			write.writeReports("Log","FAIL", Driver.column);
+			printException(e);
+		}
 	}
 	
 	public void search()
-	{	try {
-		Thread.sleep(2500); // this is required in case of search tab is overlapped with any flash msg ex: in product detail page after adding the product to cart, flash msg overlaps the seacrh tab
-	} catch (InterruptedException e2) {
-		
-		e2.printStackTrace();
-	}
-		String search_keyword,sort_value;
-	    int count=1,sort_value_int;
-		ExcelRead xl=new ExcelRead("..//Hybrid//src//com//styletag//testcases//InputData.xlsx");
-		xl.rowCountInSheet(2);
-		search_keyword=xl.read(1,0);
-		sort_value=xl.read(1,1);
-		
-		sort_value=sort_value.replaceAll("[^0-9]", "");
-		sort_value_int=Integer.parseInt(sort_value);
-		System.out.println("sort value: "+sort_value_int);
-		
-		msg="Clicking on search tab";
-		System.out.println(msg);
-		write.writeReports("Log", msg,Driver.column);
-		
-		webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).click();
-		System.out.println("Clearing the field");
-		webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).clear();
-		
-		msg="Entering "+search_keyword+" in search tab";
-		System.out.println(msg);
-		write.writeReports("Log",msg,Driver.column);
-		
-		webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).sendKeys(search_keyword);
-		
+	{	
 		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e2) {
+			Thread.sleep(3500); // this is required in case of search tab is overlapped with any flash msg ex: in product detail page after adding the product to cart, flash msg overlaps the seacrh tab
+
+
+			String search_keyword,sort_value;
+			int count=1,sort_value_int;
+			ExcelRead xl=new ExcelRead("..//Hybrid//src//com//styletag//testcases//InputData.xlsx");
+			xl.rowCountInSheet(2);
+			search_keyword=xl.read(1,0);
+			sort_value=xl.read(1,1);
 			
-			e2.printStackTrace();
-		}
-		
-		webdriver.findElement(By.cssSelector(UIobjects.search_button_css)).click();
-		/*wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.page_title_css)));
-		String title = webdriver.findElement(By.cssSelector(UIobjects.page_title_css)).getText();
-		msg=" Search page title: "+title;
-		System.out.println(msg);
-		write.writeReports("Log",msg,Driver.column);
-		*/
-		wait=new WebDriverWait(webdriver,20);
-		WebElement product;
-		try {
-			product = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.product_css)));
-			msg="Products are found in the search page";
+			sort_value=sort_value.replaceAll("[^0-9]", "");
+			sort_value_int=Integer.parseInt(sort_value);
+			System.out.println("sort value: "+sort_value_int);
+			
+			msg="Clicking on search tab";
 			System.out.println(msg);
 			write.writeReports("Log", msg,Driver.column);
-			sort(sort_value_int);
-			if(Driver.FLAG!=0)
-			{	Driver.FLAG++;
-				System.out.println("Driver.FLAG Value inside search function "+Driver.FLAG);
-				write.writeReports("Log", "PASS",Driver.column);
-			}
-							
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			msg="Products are not found in the search page";
-			System.out.println(msg);
-			write.writeReports("Log", "FAIL", Driver.column);
-			write.writeReports("Error", msg,Driver.column);
-			printException(e1);
-			Driver.FLAG=0;
-		}
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
 			
+			webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).click();
+			System.out.println("Clearing the field");
+			webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).clear();
+			
+			msg="Entering "+search_keyword+" in search tab";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
+			
+			webdriver.findElement(By.cssSelector(UIobjects.search_field_css)).sendKeys(search_keyword);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e2) {
+				
+				e2.printStackTrace();
+			}
+			
+			webdriver.findElement(By.cssSelector(UIobjects.search_button_css)).click();
+			/*wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.page_title_css)));
+			String title = webdriver.findElement(By.cssSelector(UIobjects.page_title_css)).getText();
+			msg=" Search page title: "+title;
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
+			*/
+			wait=new WebDriverWait(webdriver,20);
+			WebElement product;
+			try {
+				product = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.product_css)));
+				msg="Products are found in the search page";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				sort(sort_value_int);
+				if(Driver.FLAG!=0)
+				{	Driver.FLAG++;
+					System.out.println("Driver.FLAG Value inside search function "+Driver.FLAG);
+					write.writeReports("Log", "PASS",Driver.column);
+				}
+								
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				msg="Products are not found in the search page";
+				System.out.println(msg);
+				write.writeReports("Log", "FAIL", Driver.column);
+				write.writeReports("Error", msg,Driver.column);
+				printException(e1);
+				Driver.FLAG=0;
+			}
+			
+				Thread.sleep(4000);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+			Driver.FLAG=0;
+			write.writeReports("Log","FAIL", Driver.column);
+			printException(e);
+		} 
+		
 		
 		
 		
@@ -869,7 +964,7 @@ public class BusinessAction {
 	
 	public void productCatalogPage(){
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			
 			e.printStackTrace();
@@ -880,7 +975,7 @@ public class BusinessAction {
 			System.out.println(msg);
 			write.writeReports("Log", msg,Driver.column);
 					
-		/*	WebElement ethnicwear=	webdriver.findElement(By.id(UIobjects.ethnicwear_id));
+			WebElement ethnicwear=	webdriver.findElement(By.id(UIobjects.ethnicwear_id));
 			ethnicwear.click();
 			//Thread.sleep(1000);
 			act=new Actions(webdriver);
@@ -892,12 +987,12 @@ public class BusinessAction {
 			
 			wait =new  WebDriverWait(webdriver,60);
 			//kurta_kurtis
-			msg="clicking on Kuta_kutis";
+			/*msg="clicking on Kuta_kutis";
 			System.out.println(msg);
 			write.writeReports("Log", msg);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.kurta_kurti_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.kurta_kurti_css)).click();
-			//waitForSpinner();
+			*///waitForSpinner();
 			
 			//anarkalis
 			msg="clicking on Anarkalis";
@@ -905,13 +1000,13 @@ public class BusinessAction {
 			write.writeReports("Log", msg,Driver.column);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.anarkalis)));
 			webdriver.findElement(By.cssSelector(UIobjects.anarkalis)).click();
-			*/
+			
 			
 			//shoes
-			act.moveToElement(webdriver.findElement(By.id("shoes"))).build().perform();
+			/*act.moveToElement(webdriver.findElement(By.id("shoes"))).build().perform();
 			msg="clicking on shoes> boots";
 			webdriver.findElement(By.cssSelector("#non-footer > navbar > header > div.grid-container > nav > div > ul > li:nth-child(4) > ul > li > ul > li > ul > li > ul > li:nth-child(1) > ul > li:nth-child(1) > a.col-dark-grey.c3_li_text.ng-binding")).click();
-			
+			*/
 			//this is to overcome the menu bars drop down
 			System.out.println("scrolling down");
 			JavascriptExecutor js = (JavascriptExecutor)webdriver;
@@ -1182,6 +1277,303 @@ public class BusinessAction {
 		
 		
 	}	
+	public void checkoutLogin()
+	{
+		try {
+			wait=new WebDriverWait(webdriver, 50);
+			System.out.println("clicking on mini cart to proceed to check out");
+			msg="clicking on mini cart to proceed to check out";
+			write.writeReports("Log", msg,Driver.column);
+			//System.out.println("proceed to check out");
+			webdriver.findElement(By.cssSelector(UIobjects.minicart_css)).click();
+			
+			System.out.println();
+			msg="clicking on 'proceed to checkout button";
+			write.writeReports("Log", msg,Driver.column);
+			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.proceed_to_checkout_button_css)));
+			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_checkout_button_css)).click();
+			
+			wait.until(ExpectedConditions.visibilityOf(webdriver.findElement(By.cssSelector("#checkout-login_email"))));
+			WebElement emailid_textbox=webdriver.findElement(By.cssSelector("#checkout-login_email"));
+			WebElement pwd_textbox=webdriver.findElement(By.cssSelector("#checkout-login_password"));
+			WebElement login_button=webdriver.findElement(By.cssSelector("#continue-login-btn"));
+			
+			String  URL1 = webdriver.getCurrentUrl();
+			msg="current page is: "+"'"+URL1+"'";
+			System.out.println(msg);
+			
+			
+			// for INVALID DATA
+			// Login Button should not be enabled for these data pattern
+			msg="checking Login Button disability";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
+			int i=2; String emailid,pwd;
+			while(!(xl.read(i,0)).equals("LoginButton enabled"))
+			{	
+				System.out.println("Inside first while loop");
+				emailid=xl.read(i,0);
+				pwd=xl.read(i, 1);
+				System.out.println(i);
+				System.out.println("\nemailid: "+emailid+"  password: "+pwd);
+				
+				//Clear the text boxes;
+				emailid_textbox.clear();
+				pwd_textbox.clear();
+				
+				//enter data 
+				emailid_textbox.sendKeys(emailid);
+				pwd_textbox.sendKeys(pwd);
+				
+				Thread.sleep(500);
+				
+				if((login_button.isEnabled()))// FAIL if login button is enabled
+				{
+					System.out.println("i value is "+i+i);
+					msg="Login button enabled for following input";
+					System.out.println(msg);
+									
+					Driver.FLAG=0;
+					write.writeReports("Log","FAIL",Driver.column);
+					write.writeReports("Error",msg,Driver.column);
+					
+					msg="emailid: "+emailid+" pwd: "+pwd+"- fail";
+					write.writeReports("Log",msg,Driver.column);
+					write.writeReports("Error", msg, Driver.column);
+					System.out.println(msg);
+										
+				}
+				if(!(login_button.isEnabled()))
+				{
+					System.out.println("Login Button is not enabled");
+					msg="emaiid:"+emailid+" pwd:"+pwd+" - pass";
+					write.writeReports("Log",msg,Driver.column);
+					
+				}
+				i++;
+				
+			}
+						
+			i++; // to point to next row
+			
+			// Login Button will be enabled but login should not be successful
+			// this is for checking non valid data ie compared with DB
+			msg="Checking for Unsuccessful Login";
+			write.writeReports("Log",msg,Driver.column);
+			System.out.println(msg);
+			while(!(xl.read(i,0)).equals("Valid data"))
+			{	
+				
+				System.out.println("Inside second while");
+				emailid=xl.read(i,0);
+				pwd=xl.read(i, 1);
+				System.out.println(i);
+				System.out.println("\nemailid:  "+emailid+" password: "+pwd);
+				
+				//Clear the text boxes;
+				emailid_textbox.clear();
+				pwd_textbox.clear();
+				
+				//enter data 
+				emailid_textbox.sendKeys(emailid);
+				pwd_textbox.sendKeys(pwd);
+
+				
+				if(login_button.isEnabled())
+				{
+					System.out.println("\nLogin Button enabled and clicking on the button");
+					login_button.click();
+					Thread.sleep(2000);
+					WebElement login_flash_msg=webdriver.findElement(By.cssSelector(UIobjects.login_flash_msg_css));
+					if(login_flash_msg.isDisplayed())
+					{	
+						String text=login_flash_msg.getText();
+						String[] flash_msg_array=text.split("\n");
+					System.out.println("array value:"+flash_msg_array[0]+"end");
+					//System.out.println(text);
+						int flag=0;
+						if(!(flash_msg_array[0].equals("Sorry! Invalid email/password combination. Please try again.")))// Fail if() condition is true
+						{
+							System.out.println("inside if");
+						Driver.FLAG=0;
+						write.writeReports("Log","FAIL",Driver.column);
+						msg="emailid: "+emailid+" pwd: "+pwd;
+						write.writeReports("Error", msg,Driver.column);
+						System.out.println(msg);
+						
+						msg="Flash msg is: "+flash_msg_array[0];
+						write.writeReports("Error",msg,Driver.column);
+						System.out.println(msg);
+						flag=1;
+						}
+						if (flag!=1) // only to write pass to Log
+						{
+							msg="emailid: "+emailid+" pwd: "+pwd+" - pass";
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						System.out.println("inside else");
+						Driver.FLAG=0;
+						write.writeReports("Log","FAIL",Driver.column);
+						msg="emailid: "+emailid+" pwd: "+pwd+" - fail";
+						write.writeReports("Error", msg,Driver.column);
+						System.out.println(msg);
+						
+						msg="Flash msg 'Sorry! Invalid email/password combination. Please try again' is not displayed ";
+						write.writeReports("Error",msg,Driver.column);
+						System.out.println(msg);
+						
+					}
+					
+				
+				}i++;
+			}
+			
+			i++; // to point to next row
+			
+			// Checking for VALID DATA
+			//Login should be successful
+			msg="checking for Successful Login";
+			write.writeReports("Log",msg,Driver.column);
+			System.out.println(msg);
+			emailid=xl.read(i,0);
+			pwd=xl.read(i, 1);
+			
+			//Clear the text boxes;
+			emailid_textbox.clear();
+			pwd_textbox.clear();
+			
+			//enter data 
+			emailid_textbox.sendKeys(emailid);
+			pwd_textbox.sendKeys(pwd);
+			
+			if(login_button.isEnabled())
+			{
+				msg="emailid: "+emailid+" pwd"+pwd+" valid data";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				System.out.println("\nLogin Button enabled and clicking on the button");
+				login_button.click();
+				Thread.sleep(2000);
+				
+				WebElement login_flash_msg=webdriver.findElement(By.cssSelector(UIobjects.login_flash_msg_css));
+				if(login_flash_msg.isDisplayed())
+				{
+					
+					String text=login_flash_msg.getText();
+					String[] array=text.split("\n");
+					//System.out.println("array value: "+array[0]);
+					msg="Flash is displayed ";
+					write.writeReports("Log", msg,Driver.column);
+					
+							
+					if((array[0].equals("Successfully logged in")))
+					{
+						msg="Flash msg is: "+array[0];
+						write.writeReports("Log",msg,Driver.column);
+						
+						WebElement acc_mem_name=webdriver.findElement(By.cssSelector(UIobjects.acc_name_css));
+						if(acc_mem_name.isDisplayed())
+						{
+							msg=acc_mem_name.getText()+" - displayed";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							Driver.FLAG++;
+							write.writeReports("Log", "PASS", Driver.column);
+						
+						}else
+						{
+							Driver.FLAG=0;
+							msg="account name is not being displayed";
+							write.writeReports("Log","FAIL",Driver.column);
+							write.writeReports("Error", msg,Driver.column);
+						}
+						
+						Thread.sleep(3000);// this required for the URL to change if in case
+						
+						String URL2=webdriver.getCurrentUrl();
+						msg="current page is: "+"'"+URL2+"'";
+						System.out.println(msg);
+						//write.writeReports("Log",msg, Driver.column);
+						
+						
+						if(URL1.contains("email"))// checking login at checkout/email page
+						{
+							if(URL2.contains("address")) // should be redirected to ../address page
+							{
+								msg="Redirected to the correct page ";
+								write.writeReports("Log",msg, Driver.column);
+							}
+							else
+							{
+								msg="Redirection didnt happened to correct page";
+								write.writeReports("Log", msg, Driver.column);
+								write.writeReports("Log","FAIL", Driver.column);
+								write.writeReports("Error",msg,Driver.column);
+								msg="URL before Login: '"+URL1+"'";
+								write.writeReports("Error", msg, Driver.column);
+								msg="URL after Login: '"+URL2+"'";
+								write.writeReports("Error",msg, Driver.column);
+							}
+							
+						}
+						else
+						{
+							if(URL1.equals(URL2))
+							{
+								msg="Redirected to the correct page ";
+								write.writeReports("Log",msg, Driver.column);
+							}
+							else
+							{
+								msg="Redirection didnt happened to correct page";
+								write.writeReports("Log", msg, Driver.column);
+								write.writeReports("Log","FAIL", Driver.column);
+								write.writeReports("Error",msg,Driver.column);
+								msg="URL before Login: '"+URL1+"'";
+								write.writeReports("Error", msg, Driver.column);
+								msg="URL after Login: '"+URL2+"'";
+								write.writeReports("Error",msg, Driver.column);
+							}
+						}
+						
+						
+						
+					}else
+					{
+						msg="Flash msg is not equal to 'Successfully logged in'";
+						Driver.FLAG=0;
+						write.writeReports("Log","FAIL",Driver.column);
+						write.writeReports("Error",msg,Driver.column);
+					}
+					
+				}else
+				{
+					System.out.println("Flash msg is not displayed");
+					
+					Driver.FLAG=0;
+				}
+				
+			}else
+			{
+				msg="Login Button is not enabled";
+				Driver.FLAG=0;
+				write.writeReports("Log", "FAIL",Driver.column);
+				write.writeReports("Error",msg,Driver.column);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			Driver.FLAG=0;
+			write.writeReports("Log","FAIL", Driver.column);
+			printException(e);
+		}
+		
+	
+		
+		
+	}
 	
 	public void checkout() {
 		try
@@ -1314,9 +1706,10 @@ public class BusinessAction {
 				String product_name=webdriver.findElement(By.cssSelector("#orders-information-table > div.orders-tbody > div:nth-child("+i+") > div:nth-child(2) > p:nth-child(1)")).getText();
 				product_names[i-1]=product_name; // array indexing starts form 0.
 			}
+			System.out.println("product_names array elements\n");
 			for(i=0;i<itemcount;i++)
 			{
-				System.out.println("product"+(i+1)+": "+product_names[i]);
+				System.out.println("product"+(i)+": "+product_names[i]);
 				
 			}
 			
@@ -1324,17 +1717,15 @@ public class BusinessAction {
 			int flag=0;
 			if(cart_count==itemcount)
 			{
-				System.out.println("cart quantity = to order review page qty");
-				for(i=1;i<=itemcount;i++)
+				System.out.println("cart quantity =  order review page qty");
+				for(i=0;i<itemcount;i++)
 				{
 					msg="line item"+i;
 					System.out.println(msg);
 					write.writeReports("Log", msg,Driver.column);
-					
-					//String product_name=webdriver.findElement(By.cssSelector("#orders-information-table > div.orders-tbody > div:nth-child("+i+") > div:nth-child(2) > p:nth-child(1)")).getText();
-					//System.out.println("product name: "+product_name);
-					String name1=product_names[i-1].toLowerCase();
-					String name2=((cart_item_list.get(1)).getName()).toLowerCase();
+							
+					String name1=(product_names[i]).toLowerCase();
+					String name2=((cart_item_list.get(i)).getName()).toLowerCase();
 					if(!(name1.equals(name2)))
 					{
 						flag=1;
@@ -1346,7 +1737,7 @@ public class BusinessAction {
 				}
 				if(flag!=1)
 				{
-					msg="All item in the cart are present in order review page";
+					msg="All item in the cart are present in order_review page";
 					write.writeReports("Log", msg,Driver.column);
 				}
 			}
@@ -1478,44 +1869,48 @@ public void clearCartItems()
 	//cartitems=new CartItem[order_table_items_count];// declaring the size of cartitems array
 	//CartItem item;
 	//System.out.println("order_table_items_count "+order_table_items_count);
-	int i=1;
-
-	System.out.println("\nlist items");
-	i=order_table_items_count;
-	for(int j=1;j<=order_table_items_count;j++)
+	
+	if(order_table_items_count!=0)
 	{
-		try {
-			String name=(order_table_items.get(i-1)).findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(2) > p:nth-child(1) > a")).getText();
-			msg="product name: "+name;
-			System.out.println(msg);
-			write.writeReports("Log", msg,Driver.column);
-			WebElement remove=(order_table_items.get(i-1)).findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(2) > div > a"));// i is required to access list element becoz list indexing starts from '0' 
-			msg="clicking on remove button of line item"+i;
-			System.out.println(msg);
-			write.writeReports("Log", msg,Driver.column);
-			remove.click();
+		int i=1;
+	
+		System.out.println("\nlist items");
+		i=order_table_items_count;
+		for(int j=1;j<=order_table_items_count;j++)
+		{
 			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
+				String name=(order_table_items.get(i-1)).findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(2) > p:nth-child(1) > a")).getText();
+				msg="product name: "+name;
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				WebElement remove=(order_table_items.get(i-1)).findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(2) > div > a"));// i is required to access list element becoz list indexing starts from '0' 
+				msg="clicking on remove button of line item"+i;
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				remove.click();
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				i--;
+			} catch (Exception e) {
 				e.printStackTrace();
+				Driver.FLAG=0;
+				write.writeReports("Log", "FAIL", Driver.column);
+				printException(e);
 			}
-			i--;
-		} catch (Exception e) {
-			e.printStackTrace();
-			Driver.FLAG=0;
-			write.writeReports("Log", "FAIL", Driver.column);
-			printException(e);
 		}
+			//System.out.println("last item in the list: "+(order_table_items.get(1)).getText());
+		//removing the items from list
+		cart_item_list.removeAll(cart_item_list);
+		// clear the product names in the PD_
+		PD_product_name=new String[10];
+		product_num=1;// resetting the product count
+		System.out.println("length of cart_item_list"+cart_item_list.size());
+		Driver.FLAG++;
+		write.writeReports("Log","PASS", Driver.column);
 	}
-		//System.out.println("last item in the list: "+(order_table_items.get(1)).getText());
-	//removing the items from list
-	cart_item_list.removeAll(cart_item_list);
-	// clear the product names in the PD_
-	PD_product_name=new String[10];
-	product_num=1;// resetting the product count
-	System.out.println("length of cart_item_list"+cart_item_list.size());
-	Driver.FLAG++;
-	write.writeReports("Log","PASS", Driver.column);
 	
 }
 public void confirmationPage()

@@ -13,19 +13,19 @@ public class Driver {
 	public static int row_flag=0;
 	public static int row_num=0;
 	public static int block=0;
-	public static String url;
+	public static String HOME_URL;
 		
 	public static void main(String[] args) {
 		
 		String execution_flag,actions,msg,failed_actions="";
 		ArrayList<String> array = new ArrayList<String>();
 		
-		url="http://www.styletag.com";
+		HOME_URL="http://origin-www.stest.in";
 		ExcelWrite write= new ExcelWrite();
 		BusinessAction baction= new BusinessAction(write);
 		
-		baction.launchStyletag(url);
-		msg ="Test Report of "+url;
+		baction.launchStyletag(HOME_URL);
+		msg ="Test Report of "+HOME_URL;
 		write.writeReports("Result", msg);
 		
 		//To set Header in the Result sheet
