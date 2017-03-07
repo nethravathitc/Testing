@@ -531,6 +531,9 @@ public class BusinessAction {
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.low_high_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.low_high_css)).click();
+			
+			Thread.sleep(2000);// this is required for slider value to update
+			
 			compare(option);
 			if(Driver.FLAG!=0)
 				Driver.FLAG++;
@@ -551,6 +554,9 @@ public class BusinessAction {
 			try {
 				wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.high_low_css)));
 				webdriver.findElement(By.cssSelector(UIobjects.high_low_css)).click();
+				
+				Thread.sleep(2000);// this is required for slider value to update
+				
 				compare(option);
 				if(Driver.FLAG!=0)
 					Driver.FLAG++;
@@ -1073,14 +1079,14 @@ public class BusinessAction {
 					try {
 						webdriver.findElement(By.cssSelector(".scrollup")).click();
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					}
 					sort(2);//high_low
 					try {
 						webdriver.findElement(By.cssSelector(".scrollup")).click();
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					} 
 					if(Driver.FLAG!=0)
@@ -2216,6 +2222,128 @@ public void orderCC()
 	wait.until(ExpectedConditions.elementToBeClickable(By.id(UIobjects.credit_card_id)));
 	//webelement;
 	
+}
+public void breadCrums()
+{
+	try {
+		Thread.sleep(3000);
+		List<WebElement> page; WebElement breadcrum;
+		//product catalog page
+		page=webdriver.findElements(By.id("product-catalog")); // 'findElements' will return an empty list if no matching elements are found instead of an exception.
+		if(page.size()!=0)// page- has element pointing to id:"product-catalog" ie it is a product listing page
+		{
+			System.out.println("in product-catalog page");
+			System.out.println("size of page list is"+page.size());
+			WebElement product_listing=page.get(0);
+			List <WebElement> section= product_listing.findElements(By.cssSelector("breadcrumbs-custom > section"));// breadcrums
+			int length=section.size();
+			System.out.println("section list length: "+length);
+			
+			for(int i=(length-1);i>=2;i--) // clicking from last element and (length-1) last element is not clickable, i=1 is /home - its a static page not listing page
+			{
+				Thread.sleep(3000);
+				
+				System.out.println("i value is: "+i);
+				breadcrum=webdriver.findElement(By.cssSelector("#product-catalog > breadcrumbs-custom > section:nth-child("+i+")"));// referencing from #product-catalog is required to avoid ERROR: "stale element reference".
+				msg="clciking on: "+breadcrum.getText();
+				System.out.println(msg);
+				breadcrum.click();
+				
+				Thread.sleep(5000);
+				sort(1);//low_high
+				try {
+					System.out.println("clciking on scrollup");
+					webdriver.findElement(By.cssSelector(".scrollup")).click();
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+				}
+				sort(2);//high_low
+				try {
+					System.out.println("clicking on scrollup");
+					webdriver.findElement(By.cssSelector(".scrollup")).click();
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+				} 
+				
+				
+			}
+		}
+		else{// for product-view page
+			page=webdriver.findElements(By.id("product-view-container"));
+			if(page.size()!=0)// page- has element pointing to id:"product-catalog" ie it is a product listing page
+			{
+				System.out.println("in product-view page");
+				System.out.println("size of page list is"+page.size());
+				WebElement product_listing=page.get(0);
+				List <WebElement> section= product_listing.findElements(By.cssSelector("breadcrumbs-custom > section"));// breadcrums
+				int length=section.size();
+				System.out.println("section list length: "+length);
+				
+				breadcrum=webdriver.findElement(By.cssSelector("#product-view-container > breadcrumbs-custom > section:nth-child("+(length-1)+")"));// becoz the last breadcrum id is #product-view-container
+				// after clicking on the breadcrum the id will be changed to product-catalog
+				msg="clciking on: "+breadcrum.getText();
+				System.out.println(msg);
+				breadcrum.click();
+				
+				Thread.sleep(5000);
+				sort(1);//low_high
+				try {
+					System.out.println("clciking on scrollup");
+					webdriver.findElement(By.cssSelector(".scrollup")).click();
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+				}
+				sort(2);//high_low
+				try {
+					System.out.println("clicking on scrollup");
+					webdriver.findElement(By.cssSelector(".scrollup")).click();
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+				} 
+				
+				
+				for(int i=(length-2);i>=2;i--) // clicking from last element and (length-2) last element is already clicked, i=1 is /home - its a static page not listing page
+				{
+					Thread.sleep(3000);
+					
+					System.out.println("i value is: "+i);
+					breadcrum=webdriver.findElement(By.cssSelector("#product-catalog > breadcrumbs-custom > section:nth-child("+i+")"));// referencing from #product-catalog is required to avoid ERROR: "stale element reference".
+					msg="clciking on: "+breadcrum.getText();
+					System.out.println(msg);
+					breadcrum.click();
+					
+					Thread.sleep(5000);
+					sort(1);//low_high
+					try {
+						System.out.println("clciking on scrollup");
+						webdriver.findElement(By.cssSelector(".scrollup")).click();
+					} catch (Exception e) {
+						
+						e.printStackTrace();
+					}
+					sort(2);//high_low
+					try {
+						System.out.println("clicking on scrollup");
+						webdriver.findElement(By.cssSelector(".scrollup")).click();
+					} catch (Exception e) {
+						
+						e.printStackTrace();
+					} 
+					
+					
+				}
+			}
+		}
+	} catch (Exception e) {
+	 	e.printStackTrace();
+	 	Driver.FLAG=0;
+	 	write.writeReports("Log", "FAIL", Driver.column);
+	 	printException(e);
+	}
 }
 	
 	public void emailReport()
