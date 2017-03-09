@@ -411,8 +411,8 @@ public class BusinessAction {
 			write.writeReports("Log","PASS", Driver.column);
 			Thread.sleep(5000);// this is required for the wait till flash messages goes off
 			String url=webdriver.getCurrentUrl();
-			String url2=Driver.HOME_URL+"/";
-			if(url.equals(url2))
+			url=url+"/";
+			if(url.equals(Driver.HOME_URL))
 			{
 				msg="Redirected to HOME page";
 				write.writeReports("Log",msg, Driver.column);
@@ -429,7 +429,7 @@ public class BusinessAction {
 				write.writeReports("Log","FAIL", Driver.column);
 				write.writeReports("Error",msg, Driver.column);
 				
-				msg="Home url is: "+url2;
+				msg="Home url is: "+Driver.HOME_URL;
 				System.out.println(msg);
 				write.writeReports("Error",msg, Driver.column);
 				msg="current URL: '"+url+"'";

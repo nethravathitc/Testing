@@ -411,8 +411,7 @@ public class BusinessAction {
 			write.writeReports("Log","PASS", Driver.column);
 			Thread.sleep(5000);// this is required for the wait till flash messages goes off
 			String url=webdriver.getCurrentUrl();
-			String url2=Driver.HOME_URL+"/";
-			if(url.equals(url2))
+			if(url.equals(Driver.HOME_URL))
 			{
 				msg="Redirected to HOME page";
 				write.writeReports("Log",msg, Driver.column);
@@ -421,16 +420,10 @@ public class BusinessAction {
 			}
 			else
 			{
-				
-				
 				msg="Redirection didnot happen to HOME page";
 				System.out.println(msg);
 				write.writeReports("Log",msg, Driver.column);
 				write.writeReports("Log","FAIL", Driver.column);
-				write.writeReports("Error",msg, Driver.column);
-				
-				msg="Home url is: "+url2;
-				System.out.println(msg);
 				write.writeReports("Error",msg, Driver.column);
 				msg="current URL: '"+url+"'";
 				write.writeReports("Error", msg, Driver.column);
@@ -2281,30 +2274,24 @@ public void breadCrums()
 				
 				
 			}
-			Driver.FLAG++;
-			write.writeReports("Log", "PASS", Driver.column);
 		}
 		else{// for product-view page
 			
 			page=webdriver.findElements(By.id("product-view-container"));
 			if(page.size()!=0)// page- has element pointing to id:"product-catalog" ie it is a product listing page
 			{
-				msg="in product-view page";
-				System.out.println(msg);
-				write.writeReports("Log", msg, Driver.column);
+				
+				System.out.println("in product-view page");
 				System.out.println("size of page list is"+page.size());
 				WebElement product_listing=page.get(0);
 				List <WebElement> section= product_listing.findElements(By.cssSelector("breadcrumbs-custom > section"));// breadcrums
 				int length=section.size();
-				msg="section list length: "+length;
-				System.out.println(msg);
-				write.writeReports("Log", msg, Driver.column);
+				System.out.println("section list length: "+length);
 				
 				breadcrum=webdriver.findElement(By.cssSelector("#product-view-container > breadcrumbs-custom > section:nth-child("+(length-1)+")"));// becoz the last breadcrum id is #product-view-container
 				// after clicking on the breadcrum the id will be changed to product-catalog
 				msg="clciking on: "+breadcrum.getText();
 				System.out.println(msg);
-				write.writeReports("Log", msg, Driver.column);
 				breadcrum.click();
 				
 				Thread.sleep(5000);
@@ -2334,7 +2321,6 @@ public void breadCrums()
 					breadcrum=webdriver.findElement(By.cssSelector("#product-catalog > breadcrumbs-custom > section:nth-child("+i+")"));// referencing from #product-catalog is required to avoid ERROR: "stale element reference".
 					msg="clciking on: "+breadcrum.getText();
 					System.out.println(msg);
-					write.writeReports("Log", msg, Driver.column);
 					breadcrum.click();
 					
 					Thread.sleep(5000);
@@ -2357,14 +2343,12 @@ public void breadCrums()
 									
 				}
 				
-			Driver.FLAG++;
-			write.writeReports("Log", "PASS", Driver.column);
+				
 			}
 			else
 			{
 				Driver.FLAG=0;
-				msg="unable to find breadcrums in the given page (product-catalog/product-view)";
-				write.writeReports("Log", msg, Driver.column);
+				msg="unable to find breadcrums in the given page (product-catalog/product-view)"
 				write.writeReports("Log", "FAIL", Driver.column);
 			}
 		}
