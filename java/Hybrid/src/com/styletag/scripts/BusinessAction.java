@@ -32,6 +32,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -56,7 +57,7 @@ public class BusinessAction {
 	static int product_num=1;// 1 means first product in the listing page
 	public String[] PD_product_name=new String[10];// declaring the size of PD_product_name array. needs reset for new senario - done in Driver class
 	public BusinessAction(ExcelWrite write1){
-		xl=new ExcelRead("..//Hybrid//src//com//styletag//testcases//InputData.xlsx");
+		xl=new ExcelRead(Driver.properties.getProperty("InputDataFile"));
 		write= write1;
 		df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 	    dateobj = new Date();
@@ -72,7 +73,7 @@ public class BusinessAction {
 	
 	
 	public void launchStyletag(String url){
-		System.setProperty("webdriver.chrome.driver","../Hybrid//chromedriver");
+		System.setProperty("webdriver.chrome.driver",Driver.properties.getProperty("ChromeDriver"));
 		webdriver = new ChromeDriver();
 		webdriver.manage().timeouts().implicitlyWait(100,TimeUnit.SECONDS);
 		webdriver.get(url);
@@ -91,7 +92,7 @@ public class BusinessAction {
 	public void login() {
 		
 		try {
-			System.out.println("maximing windows");
+			//System.out.println("maximing windows");
 			//spinner();
 			Thread.sleep(3500);//it is required to get rid of flash msg. ex: if login happen as soon as logout flash msg hides the required UI element
 			String  URL1 = webdriver.getCurrentUrl();
@@ -378,7 +379,7 @@ public class BusinessAction {
 				write.writeReports("Error",msg,Driver.column);
 			}
 			
-			
+			Thread.sleep(3500); // this is to get rid of flash msh after successful/ failure login
 	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -454,7 +455,7 @@ public class BusinessAction {
 
 			String search_keyword,sort_value;
 			int count=1,sort_value_int;
-			ExcelRead xl=new ExcelRead("..//Hybrid//src//com//styletag//testcases//InputData.xlsx");
+			ExcelRead xl=new ExcelRead(Driver.properties.getProperty("InputDataFile"));
 			xl.rowCountInSheet(2);
 			search_keyword=xl.read(1,0);
 			sort_value=xl.read(1,1);
@@ -704,7 +705,7 @@ public class BusinessAction {
 				Driver.FLAG=0;
 				File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
 				try {
-					FileUtils.copyFile(scrFile, new File("//home//styletag//sanity_reports//product_price_mismatch"+date+".png"));
+					FileUtils.copyFile(scrFile, new File(Driver.properties.getProperty("ScreenSchot")+"product_price_mismatch"+date+".png"));
 				} catch (IOException e) {
 					e.printStackTrace();
 					msg="Error while taking screenschot inside compare function";
@@ -789,7 +790,7 @@ public class BusinessAction {
 		write.writeReports("Log",msg,Driver.column);
 		//write.writeReports("Log", "clicking on product", Driver.column);
 		
-		wait= new WebDriverWait(webdriver,10);
+		wait= new WebDriverWait(webdriver,20);
 		try {
 			
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#product-container > div.ng-isolate-scope > ul > li:nth-child("+product_num+") > div > div.product-image > a > img")));
@@ -961,7 +962,7 @@ public class BusinessAction {
 			File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
 			try {
 				
-				String path="//home//styletag//sanity_report//screen_shots//ProductDetailPage"+date+".png";
+				String path=Driver.properties.getProperty("ScreenSchot")+"ProductDetailPage"+date+".png";
 				FileUtils.copyFile(scrFile, new File(path));
 				msg="Screenshot taken";
 				System.out.println(msg);
@@ -999,8 +1000,9 @@ public class BusinessAction {
 			write.writeReports("Log", msg,Driver.column);
 			
 			wait =new  WebDriverWait(webdriver,60);
+			
 			//kurta_kurtis
-			/*msg="clicking on Kuta_kutis";
+		/*	msg="clicking on Kuta_kutis";
 			System.out.println(msg);
 			write.writeReports("Log", msg);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.kurta_kurti_css)));
@@ -1011,20 +1013,44 @@ public class BusinessAction {
 			msg="clicking on Anarkalis";
 			System.out.println(msg);
 			write.writeReports("Log", msg,Driver.column);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.anarkalis)));
-			webdriver.findElement(By.cssSelector(UIobjects.anarkalis)).click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.anarkali_new)));
+			webdriver.findElement(By.cssSelector(UIobjects.anarkali_new)).click();
 			
 			
 			//shoes
-			/*act.moveToElement(webdriver.findElement(By.id("shoes"))).build().perform();
-			msg="clicking on shoes> boots";
-			webdriver.findElement(By.cssSelector("#non-footer > navbar > header > div.grid-container > nav > div > ul > li:nth-child(4) > ul > li > ul > li > ul > li > ul > li:nth-child(1) > ul > li:nth-child(1) > a.col-dark-grey.c3_li_text.ng-binding")).click();
+		/*	act=new Actions(webdriver);
+			act.moveToElement(webdriver.findElement(By.id("shoes"))).build().perform();
+			msg="clicking on shoes > boots";
+			System.out.println(msg);
+			write.writeReports("Log", msg, Driver.column);
+			Thread.sleep(300);
+			webdriver.findElement(By.cssSelector("#non-footer > navbar > header > div.grid-container > nav > div > ul > li:nth-child(3) > ul > li > ul > li > ul > li > ul > li:nth-child(1) > ul > li:nth-child(1) > a.col-dark-grey.c3_li_text.ng-binding")).click();
 			*/
+			
+			
+			
+			//kurthique
+		/*	WebElement kurtique= webdriver.findElement(By.cssSelector("#kurtique-kurtas-kurtis"));
+			msg="clicking on kurique";
+			System.out.println(msg);
+			write.writeReports("Log", msg, Driver.column);
+			kurtique.click();
+			act=new Actions(webdriver);
+			act.moveToElement(kurtique).build().perform();
+			msg="moving on kutique";
+			write.writeReports("Log", msg,Driver.column);
+			System.out.println(msg);
+			msg="moving on 'shop the botique > short'";
+			write.writeReports("Log", msg, Driver.column);
+			*/
+			//webdriver.findElement(By.cssSelector("#non-footer > navbar > header > div.grid-container > nav > div > ul > li:nth-child(9) > ul > li > ul > li > ul > li.c2_items_wrap.ng-scope.c2_items_wrap_active > ul > li:nth-child(1) > ul > li:nth-child(1) > a.col-dark-grey.c3_li_text.ng-binding")).click();
+			
 			//this is to overcome the menu bars drop down
+			
 			System.out.println("scrolling down");
 			JavascriptExecutor js = (JavascriptExecutor)webdriver;
 			js.executeScript("window.scrollBy(0,100)","");
-			
+			Thread.sleep(1000);
 			
 			Driver.FLAG++;
 			write.writeReports("Log", "PASS",Driver.column);
@@ -1199,6 +1225,17 @@ public class BusinessAction {
 				System.out.println("Shipping charges: "+shipping_i);
 				//cartitems[i-1].setShipping(shipping_i);
 				item.setShipping(shipping_i);
+				
+				String total_s = eachElement.findElement(By.cssSelector("#cart_product_"+i+" > div:nth-child(6) > p")).getText();
+				total_s=total_s.replaceAll("[^0-9]", "");
+				int total_i=Integer.parseInt(total_s);
+				total_i=total_i/100;
+				System.out.println("Total: "+total_i);
+				
+				if(total_i==(price_i+shipping_i))
+				{
+					
+				}
 				
 				cart_item_list.add(item);
 				
@@ -1639,6 +1676,27 @@ public class BusinessAction {
 			System.out.println(msg);
 			write.writeReports("Log", msg,Driver.column);
 			
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > label:nth-child(2) > p > input[type="+"radio"+"]")));
+			WebElement default_add=webdriver.findElement(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > label:nth-child(2) > p > input[type="+"radio"+"]"));
+			if(default_add.isSelected())
+			{
+				WebElement address=webdriver.findElement(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > label:nth-child(2) > address > span"));
+				String checkout_address=address.getText();
+				msg="Selected adress : "+checkout_address;
+				System.out.println(msg);
+				write.writeReports("Log", msg, Driver.column);
+				
+				WebElement delivery_button=webdriver.findElement(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > label:nth-child(2) > div > button"));
+				delivery_button.click();
+			}
+			
+			
+			
+			
+			
+			
+			
+			
 			// to check "no_address_found text is displaying"
 			try {
 				Thread.sleep(500);
@@ -1655,7 +1713,7 @@ public class BusinessAction {
 				webdriver.findElement(By.cssSelector(UIobjects.add_address_button)).click();
 				// need to fill the form
 			}*/
-			int add_select_flag=0;
+		/*	int add_select_flag=0;
 			int i;
 			for(i=2;i<=10;i++)
 			{	System.out.println("inside selecting address for-loop");
@@ -1679,7 +1737,7 @@ public class BusinessAction {
 				}
 				
 			}
-			if(i>10 && add_select_flag==0) // couldnt select any addesses
+			if(i>10 && add_select_flag==0) // couldnt select any addresses
 			{
 				msg="Address is not selected";
 				System.out.println(msg);
@@ -1691,7 +1749,7 @@ public class BusinessAction {
 				write.writeReports("Error",msg,Driver.column);
 				Driver.FLAG=0;
 				return;
-			}
+			}*/
 			
 			
 		/*	wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.select_add1_css)));
@@ -1710,6 +1768,7 @@ public class BusinessAction {
 			
 			
 			//checking order review
+			int i;
 			List<WebElement> itemcount_w=webdriver.findElements(By.cssSelector("#orders-information-table > div.orders-tbody > div"));
 			int itemcount=itemcount_w.size();
 			System.out.println("total no of items in the order review page is: "+itemcount);
@@ -2375,11 +2434,55 @@ public void breadCrums()
 	 	printException(e);
 	}
 }
+
+public void myAccounts()
+{
+	
+	try {
+		
+		msg="checking My Acounts";
+		write.writeReports("Log", msg, Driver.column);
+		wait = new WebDriverWait(webdriver,50);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(UIobjects.acc_mem_name_id)));
+		WebElement menu = webdriver.findElement(By.id(UIobjects.acc_mem_name_id));
+		new Actions(webdriver).moveToElement(menu).build().perform();
+		System.out.println("calling perform function");
+		Thread.sleep(2000);
+		
+		msg="clicking on My Orders";
+		System.out.println(msg);
+		write.writeReports("Log", msg, Driver.column);
+		webdriver.findElement(By.cssSelector(UIobjects.my_orders_css)).click();
+		
+		msg="clicking on recent 'ORDER DETAIL' button";
+		write.writeReports("Log", msg, Driver.column);
+		webdriver.findElement(By.cssSelector(UIobjects.recent_orderdetail_button_css)).click();
+		
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.order_detail_address_css)));
+		WebElement address=webdriver.findElement(By.cssSelector(UIobjects.order_detail_address_css));
+		String shipping_address=address.getText();
+		msg="recent order Address : "+shipping_address;
+		String[] default_shipping_address = new String[10];
+		default_shipping_address = shipping_address.split(",");
+		System.out.println("Default shipping address");
+		for(String each:default_shipping_address)
+		{
+			System.out.println(each+"\n");
+		}
+		System.out.println(msg);
+		write.writeReports("Log", msg, Driver.column);
+	
+	} catch (InterruptedException e) {
+		
+		e.printStackTrace();
+		printException(e);
+	}
+}
 	
 	public void emailReport()
 	{
-		final String username = "tabs@styletag.com";
-	    final String password = "styletag321";
+		final String username = Driver.properties.getProperty("FromEmailID");
+	    final String password = Driver.properties.getProperty("Password");
 
 	    Properties props = new Properties();
 	    props.put("mail.smtp.auth", "true");
@@ -2399,7 +2502,7 @@ public void breadCrums()
 	        Message message = new MimeMessage(session);
 	        message.setFrom(new InternetAddress("tabs@styletag.com"));//from address
 	        message.setRecipients(Message.RecipientType.TO,
-	                InternetAddress.parse("nethravathi.tc@styletag.com,sumit.kumar@styletag.com,rashmi.un@styletag.com"));//to address
+	                InternetAddress.parse(Driver.properties.getProperty("ToEmailID")));//to address
 	        message.setSubject("Sanity Test Report");
 	        message.setText("PFA for sanity reports");
 

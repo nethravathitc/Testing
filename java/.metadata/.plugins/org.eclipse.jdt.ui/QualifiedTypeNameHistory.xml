@@ -15,7 +15,6 @@
 <fullyQualifiedTypeName name="javax.mail.Transport"/>
 <fullyQualifiedTypeName name="javax.mail.MessagingException"/>
 <fullyQualifiedTypeName name="org.openqa.selenium.support.ui.WebDriverWait"/>
-<fullyQualifiedTypeName name="com.styletag.uiobjects.UIobjects"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="com.styletag.scripts.CartItem"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
@@ -23,4 +22,6 @@
 <fullyQualifiedTypeName name="java.lang.System"/>
 <fullyQualifiedTypeName name="org.openqa.selenium.support.ui.ExpectedConditions"/>
 <fullyQualifiedTypeName name="com.styletag.scripts.Driver"/>
+<fullyQualifiedTypeName name="com.styletag.uiobjects.UIobjects"/>
+<fullyQualifiedTypeName name="org.openqa.selenium.support.ui.ExpectedCondition"/>
 </qualifiedTypeNameHistroy>

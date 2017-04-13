@@ -1,8 +1,13 @@
 package com.styletag.scripts;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import com.styletag.functionalLib.*;
 
@@ -14,13 +19,26 @@ public class Driver {
 	public static int row_num=0;
 	public static int block=0;
 	public static String HOME_URL;
+	public static Properties properties;
 		
 	public static void main(String[] args) {
 		
+		// initalizing properties variable to configuration file
+		try{	
+		File file = new File("..//Hybrid//util//config.xml");
+			FileInputStream fileInput = new FileInputStream(file);
+			properties = new Properties();
+			properties.loadFromXML(fileInput);
+			fileInput.close();
+			
+			String continent=properties.getProperty("favoriteAnimal");
+			System.out.println("Favorite continent is: "+continent);
+			HOME_URL=properties.getProperty("HOME_URL");
+			
+				
 		String execution_flag,actions,msg,failed_actions="";
 		ArrayList<String> array = new ArrayList<String>();
-		
-		HOME_URL="http://origin-www.stest.in";
+				
 		ExcelWrite write= new ExcelWrite();
 		BusinessAction baction= new BusinessAction(write);
 		
@@ -39,10 +57,10 @@ public class Driver {
 		
 		
 						
-		ExcelRead xl= new ExcelRead("..//Hybrid//src//com//styletag//testcases//TestSuit.xlsx");
+		ExcelRead xl= new ExcelRead(properties.getProperty("TestSuitFile"));
 		int n =xl.rowCountInSheet(0);
 		int i=1;
-		try{
+		
 		while (xl.read(i,0)!=null)
 		{	
 			array.add(""+i); // serial no's
@@ -91,6 +109,7 @@ public class Driver {
 					try {
 						   // FLAG=0; // resetting the FLAG
 						   // System.out.println("Driver.FLAG value before executing the function "+FLAG);
+							//Thread.sleep(300);
 							Method method = baction.getClass().getMethod(actions);
 							method.invoke(baction);
 							
@@ -139,7 +158,9 @@ public class Driver {
 			array.removeAll(array);// to remove the previous entry in the list, otherwise this list will store all the strings
 			//baction.cart_item_list.removeAll(baction.cart_item_list); // resetting these variables for next scenario execution
 		}
-		}catch(Exception e)
+		}
+		
+		catch(Exception e)
 		{
 			e.printStackTrace();
 			e.printStackTrace();

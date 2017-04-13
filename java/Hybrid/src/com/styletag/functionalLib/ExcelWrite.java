@@ -51,7 +51,7 @@ public class ExcelWrite {
 	    sd[1]=sd[1].replaceAll(":","_");
 	    d="_date_"+sd[0]+"_time_"+sd[1];
 	    
-	    report_file_path="//home//styletag//sanity_reports//report"+d+".xlsx";
+	    report_file_path=Driver.properties.getProperty("ReportFlePath")+d+".xlsx";
 	    file_name="report"+d+".xlsx";
 	   
 	   String msg1="TEST EXECUTION RESULTS ",msg2="DATE: "+df.format(dateobj);

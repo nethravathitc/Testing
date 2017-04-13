@@ -10,7 +10,13 @@ public class UIobjects {
 	public static String acc_mem_name_id= "account-member-name";
 	public static String inner_logout_css = ".show-profile-inner-logout";
 	public static String login_flash_msg_css= "#non-footer > div:nth-child(2)";
+	
+	//MY Accounts
 	public static String acc_name_css ="#account-member-name ";
+	public static String my_orders_css="#account-wrap > div > div:nth-child(1) > div.account-inline.ng-scope > ul > li.show-profile-inner.my-order > a";
+	public static String recent_orderdetail_button_css="#orders-information > section > div:nth-child(1) > div.thanku-inner-header > div.bit-2.padding-zero.pull-right.text-right > p > a";
+	public static String order_detail_address_css="#thanku-order-detail > div.shipping-addr.bit-2.pull-left.text-left > p.th-user-details.text-capitalize.shp-addr.ng-binding";
+	
 	
 	//search 
 	public static String search_field_css = "#aws_form_search > #appendedInputButtons";
@@ -47,6 +53,7 @@ public class UIobjects {
 	public static String westernwear_id="western-wear";
 	public static String kurta_kurti_css=".submenu > li:nth-child(1) > ul > li > ul > li > ul > li > ul > li:nth-child(1) > ul > li:nth-child(1) > a.col-dark-grey";
 	public static String anarkalis = ".submenu > li:nth-child(1) > ul > li > ul > li > ul > li > ul > li:nth-child(1) > ul > li:nth-child(4)";
+	public static String anarkali_new="#non-footer > navbar > header > div.grid-container > nav > div > ul > li:nth-child(1) > ul > li > ul > li > ul > li.c2_items_wrap.ng-scope.c2_items_wrap_active > div > header > a";
 	public static String top_tees_css="#non-footer > navbar > header > div.grid-container > nav > div > ul > li:nth-child(1) > ul > li > ul > li > ul > li > ul > li:nth-child(1) > ul > li:nth-child(1) > a.col-dark-grey.c3_li_text.ng-binding";
 	public static String skirts_dress = "#non-footer > navbar > header > div.grid-container > nav > div > ul > li:nth-child(1) > ul > li > ul > li > ul > li > ul > li:nth-child(1) > ul > li:nth-child(2)";
 	
