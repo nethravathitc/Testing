@@ -38,6 +38,7 @@ public class UIobjects {
 	public static String order_table_items_css="#orders-information-table > div.orders-tbody > div";
 	
 	//checkout page
+	public static String checkout_email_btn_css="#open-one-btn";
 	public static String user_loggedin_emailid="#auth-body > div > div:nth-child(1) > p.font-16 > strong";
 	public static String continue_email_css = "#open-two";
 	public static String no_address_text="#address-body > div > div:nth-child(3) > div > p";

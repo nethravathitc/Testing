@@ -57,7 +57,7 @@ public class BusinessAction {
 	static int product_num=1;// 1 means first product in the listing page
 	public String[] PD_product_name=new String[10];// declaring the size of PD_product_name array. needs reset for new senario - done in Driver class
 	public BusinessAction(ExcelWrite write1){
-		xl=new ExcelRead("..//Hybrid//src//com//styletag//testcases//InputData.xlsx");
+		xl=new ExcelRead(Driver.properties.getProperty("InputDataFile"));
 		write= write1;
 		df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 	    dateobj = new Date();
@@ -73,7 +73,7 @@ public class BusinessAction {
 	
 	
 	public void launchStyletag(String url){
-		System.setProperty("webdriver.chrome.driver","../Hybrid//chromedriver");
+		System.setProperty("webdriver.chrome.driver",Driver.properties.getProperty("ChromeDriver"));
 		webdriver = new ChromeDriver();
 		webdriver.manage().timeouts().implicitlyWait(100,TimeUnit.SECONDS);
 		webdriver.get(url);
@@ -455,7 +455,7 @@ public class BusinessAction {
 
 			String search_keyword,sort_value;
 			int count=1,sort_value_int;
-			ExcelRead xl=new ExcelRead("..//Hybrid//src//com//styletag//testcases//InputData.xlsx");
+			ExcelRead xl=new ExcelRead(Driver.properties.getProperty("InputDataFile"));
 			xl.rowCountInSheet(2);
 			search_keyword=xl.read(1,0);
 			sort_value=xl.read(1,1);
@@ -705,7 +705,7 @@ public class BusinessAction {
 				Driver.FLAG=0;
 				File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
 				try {
-					FileUtils.copyFile(scrFile, new File("//home//styletag//sanity_reports//product_price_mismatch"+date+".png"));
+					FileUtils.copyFile(scrFile, new File(Driver.properties.getProperty("ScreenSchot")+"product_price_mismatch"+date+".png"));
 				} catch (IOException e) {
 					e.printStackTrace();
 					msg="Error while taking screenschot inside compare function";
@@ -962,7 +962,7 @@ public class BusinessAction {
 			File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
 			try {
 				
-				String path="//home//styletag//sanity_reports//screen_shots//ProductDetailPage"+date+".png";
+				String path=Driver.properties.getProperty("ScreenSchot")+"ProductDetailPage"+date+".png";
 				FileUtils.copyFile(scrFile, new File(path));
 				msg="Screenshot taken";
 				System.out.println(msg);
@@ -1641,20 +1641,50 @@ public class BusinessAction {
 			write.writeReports("Log", msg,Driver.column);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.proceed_to_checkout_button_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_checkout_button_css)).click();
-			//Thread.sleep(4000);
-			/* email step has been removed.
-			String user_logged_in_email=webdriver.findElement(By.cssSelector(UIobjects.user_loggedin_emailid)).getText();
-			if(!(user_logged_in_email.equals("")))
+			
+			// check for the the URL
+			String current_URL = webdriver.getCurrentUrl();
+			String expected_URL = Driver.HOME_URL+"/checkout/address";
+			System.out.println("current URL: "+current_URL);
+			System.out.println("epected URL: "+expected_URL);
+			if (expected_URL.equals(current_URL))
 			{
-				
+				msg="Redirected to checkout/address page";
+				System.out.println(msg);
+				write.writeReports("Log", msg, Driver.column);
+			}
+			else
+			{
+				msg="FAIL : Redirection didnt happen to checkout/address page";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				msg="Current URL: "+current_URL;
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+			}
+			
+			// checking for checkout/email page
+			//Thread.sleep(4000);
+			
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.checkout_email_btn_css)));
+			msg="chcking EmailID of the user";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
+			webdriver.findElement(By.cssSelector(UIobjects.checkout_email_btn_css)).click();
+			
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.user_loggedin_emailid)));
+			String user_logged_in_email=webdriver.findElement(By.cssSelector(UIobjects.user_loggedin_emailid)).getText();
+			System.out.println(user_logged_in_email);
+			if((user_logged_in_email.equals("")))
+			{				
 				System.out.println("Error!! user Id is not displayed");
-				msg="Error!! user Id is not displayed";
+				msg="Error!! user ID is not displayed";
 				write.writeReports("Log", msg,Driver.column);
 				write.writeReports("Log","FAIL",Driver.column);
 				write.writeReports("Error", msg,Driver.column);
 				
 				Driver.FLAG=0;
-				return;
+				
 			}
 			else
 			{	
@@ -1671,10 +1701,11 @@ public class BusinessAction {
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.continue_email_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.continue_email_css)).click();
 			
-			*/
+			
+			// chekout/address page
 			msg="selecting address";
 			System.out.println(msg);
-			write.writeReports("Log", msg,Driver.column);
+			write.writeReports("Log", msg,Driver.column);S
 			
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > label:nth-child(2) > p > input[type="+"radio"+"]")));
 			WebElement default_add=webdriver.findElement(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > label:nth-child(2) > p > input[type="+"radio"+"]"));
@@ -1689,14 +1720,7 @@ public class BusinessAction {
 				WebElement delivery_button=webdriver.findElement(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > label:nth-child(2) > div > button"));
 				delivery_button.click();
 			}
-			
-			
-			
-			
-			
-			
-			
-			
+				
 			// to check "no_address_found text is displaying"
 			try {
 				Thread.sleep(500);
@@ -2481,8 +2505,8 @@ public void myAccounts()
 	
 	public void emailReport()
 	{
-		final String username = "tabs@styletag.com";
-	    final String password = "styletag321";
+		final String username = Driver.properties.getProperty("FromEmailID");
+	    final String password = Driver.properties.getProperty("Password");
 
 	    Properties props = new Properties();
 	    props.put("mail.smtp.auth", "true");
@@ -2502,7 +2526,7 @@ public void myAccounts()
 	        Message message = new MimeMessage(session);
 	        message.setFrom(new InternetAddress("tabs@styletag.com"));//from address
 	        message.setRecipients(Message.RecipientType.TO,
-	                InternetAddress.parse("nethravathi.tc@styletag.com,sumit.kumar@styletag.com,rashmi.un@styletag.com,siddesh.sh@styletag.com"));//to address
+	                InternetAddress.parse(Driver.properties.getProperty("ToEmailID")));//to address
 	        message.setSubject("Sanity Test Report");
 	        message.setText("PFA for sanity reports");
 

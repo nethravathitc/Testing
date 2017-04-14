@@ -1641,20 +1641,49 @@ public class BusinessAction {
 			write.writeReports("Log", msg,Driver.column);
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.proceed_to_checkout_button_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.proceed_to_checkout_button_css)).click();
-			//Thread.sleep(4000);
-			/* email step has been removed.
-			String user_logged_in_email=webdriver.findElement(By.cssSelector(UIobjects.user_loggedin_emailid)).getText();
-			if(!(user_logged_in_email.equals("")))
+			
+			// check for the the URL
+			String current_URL = webdriver.getCurrentUrl();
+			String expected_URL = Driver.HOME_URL+"/checkout/address";
+			System.out.println("current URL: "+current_URL);
+			System.out.println("epected URL: "+expected_URL);
+			if (expected_URL.equals(current_URL))
 			{
-				
+				msg="Redirected to checkout/address page";
+				System.out.println(msg);
+				write.writeReports("Log", msg, Driver.column);
+			}
+			else
+			{
+				msg="FAIL : Redirection didnt happen to checkout/address page";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				msg="Current URL: "+current_URL;
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+			}
+			
+			// checking for checkout/email page
+			//Thread.sleep(4000);
+			
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.checkout_email_btn_css)));
+			msg="chcking EmailID of the user";
+			System.out.println(msg);
+			write.writeReports("Log",msg,Driver.column);
+			webdriver.findElement(By.cssSelector(UIobjects.checkout_email_btn_css)).click();
+			
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(UIobjects.user_loggedin_emailid)));
+			String user_logged_in_email=webdriver.findElement(By.cssSelector(UIobjects.user_loggedin_emailid)).getText();
+			if((user_logged_in_email.equals("")))
+			{				
 				System.out.println("Error!! user Id is not displayed");
-				msg="Error!! user Id is not displayed";
+				msg="Error!! user ID is not displayed";
 				write.writeReports("Log", msg,Driver.column);
 				write.writeReports("Log","FAIL",Driver.column);
 				write.writeReports("Error", msg,Driver.column);
 				
 				Driver.FLAG=0;
-				return;
+				
 			}
 			else
 			{	
@@ -1671,7 +1700,8 @@ public class BusinessAction {
 			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.continue_email_css)));
 			webdriver.findElement(By.cssSelector(UIobjects.continue_email_css)).click();
 			
-			*/
+			
+			// chekout/address page
 			msg="selecting address";
 			System.out.println(msg);
 			write.writeReports("Log", msg,Driver.column);
@@ -1689,14 +1719,7 @@ public class BusinessAction {
 				WebElement delivery_button=webdriver.findElement(By.cssSelector("#address-body > div > div.checkout-addresses.ng-scope > div > div > label:nth-child(2) > div > button"));
 				delivery_button.click();
 			}
-			
-			
-			
-			
-			
-			
-			
-			
+				
 			// to check "no_address_found text is displaying"
 			try {
 				Thread.sleep(500);

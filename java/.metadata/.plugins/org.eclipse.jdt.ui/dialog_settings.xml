@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="/home/styletag/Documents/javax_mail_jar" key="org.eclipse.jdt.ui.lastextjar"/>
+	<item value="/home/styletag/test-framework/java/Hybrid/util/selenium jar files/lib" key="org.eclipse.jdt.ui.lastextjar"/>
 	<section name="FatJarPackageWizard">
 		<item value="/home/styletag/test-framework/java" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
 		<item value="Driver - Hybrid" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
