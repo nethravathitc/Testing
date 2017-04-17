@@ -4,10 +4,13 @@
 	<section name="FatJarPackageWizard">
 		<item value="/home/styletag/test-framework/java" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
 		<item value="Driver - Hybrid" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
-		<item value="/home/styletag/Desktop/b.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="/home/styletag/Desktop/sanityTest.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="false" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="1" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="/home/styletag/Desktop/sanityTest.jar"/>
+			<item value="/home/styletag/Desktop/sanity1.jar"/>
+			<item value="/home/styletag/Desktop/sanity.jar"/>
 			<item value="/home/styletag/Desktop/b.jar"/>
 			<item value="/home/styletag/Desktop/a.jar"/>
 			<item value="/home/styletag/Desktop/Untitled1.jar"/>

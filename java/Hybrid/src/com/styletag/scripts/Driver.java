@@ -25,7 +25,7 @@ public class Driver {
 		
 		// initalizing properties variable to configuration file
 		try{	
-		File file = new File("..//Hybrid//util//config.xml");
+		File file = new File(System.getProperty("user.dir")+"//config.xml");
 			FileInputStream fileInput = new FileInputStream(file);
 			properties = new Properties();
 			properties.loadFromXML(fileInput);
@@ -57,7 +57,7 @@ public class Driver {
 		
 		
 						
-		ExcelRead xl= new ExcelRead(properties.getProperty("TestSuitFile"));
+		ExcelRead xl= new ExcelRead(System.getProperty("user.dir")+properties.getProperty("TestSuitFile"));
 		int n =xl.rowCountInSheet(0);
 		int i=1;
 		

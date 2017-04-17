@@ -57,7 +57,7 @@ public class BusinessAction {
 	static int product_num=1;// 1 means first product in the listing page
 	public String[] PD_product_name=new String[10];// declaring the size of PD_product_name array. needs reset for new senario - done in Driver class
 	public BusinessAction(ExcelWrite write1){
-		xl=new ExcelRead(Driver.properties.getProperty("InputDataFile"));
+		xl=new ExcelRead(System.getProperty("user.dir")+Driver.properties.getProperty("InputDataFile"));
 		write= write1;
 		df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 	    dateobj = new Date();
@@ -73,7 +73,7 @@ public class BusinessAction {
 	
 	
 	public void launchStyletag(String url){
-		System.setProperty("webdriver.chrome.driver",Driver.properties.getProperty("ChromeDriver"));
+		System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+Driver.properties.getProperty("ChromeDriver"));
 		webdriver = new ChromeDriver();
 		webdriver.manage().timeouts().implicitlyWait(100,TimeUnit.SECONDS);
 		webdriver.get(url);
@@ -455,7 +455,7 @@ public class BusinessAction {
 
 			String search_keyword,sort_value;
 			int count=1,sort_value_int;
-			ExcelRead xl=new ExcelRead(Driver.properties.getProperty("InputDataFile"));
+			//ExcelRead xl=new ExcelRead(Driver.properties.getProperty("InputDataFile"));
 			xl.rowCountInSheet(2);
 			search_keyword=xl.read(1,0);
 			sort_value=xl.read(1,1);
@@ -705,7 +705,7 @@ public class BusinessAction {
 				Driver.FLAG=0;
 				File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
 				try {
-					FileUtils.copyFile(scrFile, new File(Driver.properties.getProperty("ScreenSchot")+"product_price_mismatch"+date+".png"));
+					FileUtils.copyFile(scrFile, new File(System.getProperty("user.dir")+Driver.properties.getProperty("ScreenSchot")+"product_price_mismatch"+date+".png"));
 				} catch (IOException e) {
 					e.printStackTrace();
 					msg="Error while taking screenschot inside compare function";
@@ -962,7 +962,7 @@ public class BusinessAction {
 			File scrFile = ((TakesScreenshot)webdriver).getScreenshotAs(OutputType.FILE);
 			try {
 				
-				String path=Driver.properties.getProperty("ScreenSchot")+"ProductDetailPage"+date+".png";
+				String path=System.getProperty("user.dir")+Driver.properties.getProperty("ScreenSchot")+"ProductDetailPage"+date+".png";
 				FileUtils.copyFile(scrFile, new File(path));
 				msg="Screenshot taken";
 				System.out.println(msg);
