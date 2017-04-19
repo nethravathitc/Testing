@@ -60,10 +60,12 @@ public class Driver {
 		ExcelRead xl= new ExcelRead(System.getProperty("user.dir")+properties.getProperty("TestSuitFile"));
 		int n =xl.rowCountInSheet(0);
 		int i=1;
+		int serial_num=1;
+		String SL_no;
 		
 		while (xl.read(i,0)!=null)
 		{	
-			array.add(""+i); // serial no's
+			array.add(""+serial_num); // serial no's
 						
 			String scenario = msg=xl.read(i, 0);
 			array.add(msg);
@@ -89,9 +91,16 @@ public class Driver {
 				int row_num_error=write.lastRowNum("Error")+1;
 				row=row_num;// this to store the starting row no from where the first action logs
 				//System.out.println("row_num before executing action and col num "+row_num+" "+column);
+				
+				SL_no=""+serial_num;
+				write.writeReports("Log", SL_no,column);
+				write.writeReports("Error",SL_no,column);
+				column++;
+				
 				write.writeReports("Error", scenario);
 				write.writeReports("Log", scenario);
-				int k=1;	
+				int k=1;
+				
 				do
 				{
 					
@@ -100,6 +109,11 @@ public class Driver {
 					System.out.println("\n"+msg);
 					if(!actions.equals(""))
 					{
+						/*SL_no=""+serial_num;
+						write.writeReports("Log", SL_no,column);
+						write.writeReports("Error",SL_no,column);
+						column++;
+						*/
 						write.writeReports("Log", msg,column);
 						write.writeReports("Error", msg,column);
 					}
@@ -149,6 +163,7 @@ public class Driver {
 				
 				array.add(failed_actions);// adding failed action after the scenarios result
 				write.writeReports("Result", array);
+				serial_num++;
 				row_flag=0;
 				failed_actions="";
 				
@@ -162,7 +177,6 @@ public class Driver {
 		
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			e.printStackTrace();
 		}
 		

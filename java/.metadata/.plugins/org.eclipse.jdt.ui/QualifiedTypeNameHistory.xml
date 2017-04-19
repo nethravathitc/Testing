@@ -13,7 +13,6 @@
 <fullyQualifiedTypeName name="javax.activation.DataHandler"/>
 <fullyQualifiedTypeName name="javax.mail.Transport"/>
 <fullyQualifiedTypeName name="javax.mail.MessagingException"/>
-<fullyQualifiedTypeName name="org.openqa.selenium.support.ui.WebDriverWait"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="com.styletag.scripts.CartItem"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
@@ -26,6 +25,9 @@
 <fullyQualifiedTypeName name="java.io.FileInputStream"/>
 <fullyQualifiedTypeName name="java.io.FileNotFoundException"/>
 <fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="org.openqa.selenium.support.ui.WebDriverWait"/>
 <fullyQualifiedTypeName name="org.openqa.selenium.support.ui.ExpectedConditions"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="org.openqa.selenium.WebElement"/>
 <fullyQualifiedTypeName name="com.styletag.uiobjects.UIobjects"/>
 </qualifiedTypeNameHistroy>

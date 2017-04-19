@@ -17,7 +17,16 @@ public class UIobjects {
 	public static String recent_orderdetail_button_css="#orders-information > section > div:nth-child(1) > div.thanku-inner-header > div.bit-2.padding-zero.pull-right.text-right > p > a";
 	public static String order_detail_address_css="#thanku-order-detail > div.shipping-addr.bit-2.pull-left.text-left > p.th-user-details.text-capitalize.shp-addr.ng-binding";
 	
-	
+	//Register
+	public static String regiter_name_css="#register_name";
+	public static String register_email_css="#register_email";
+	public static String register_pwd_css ="#register_password";
+	public static String register_btn_css="#register-btn";
+	public static String register_link_css="#account-wrap > div > div:nth-child(1) > div > div > div:nth-child(4) > a.register-link";
+	public static String register_name_errmsg_css="#registration-form > p:nth-child(3)";
+	public static String register_emailid_errmsg_css="#registration-form > p:nth-child(5)";
+	public static String register_pwd_errmsg_css="#registration-form > p:nth-child(7)";
+		
 	//search 
 	public static String search_field_css = "#aws_form_search > #appendedInputButtons";
 	public static String search_button_css = "#aws_form_search > #submitButton";
@@ -66,6 +75,8 @@ public class UIobjects {
 	public static String product_title_css="#sale-main-desc > div.cart-form.pull-right > h1";
 	public static String option_css="#product-size > p > strong";
 	public static String flash_msg_css="#product-view-container > cart-blurb > div > div > div > div > div > div > p:nth-child(2)";
+	public static String add_to_cart_btn_css="#add-to-cart-button";
+	public static String buy_now_btn_css="#buy-now-button";
 	
 	//Filters
 	public static String color_css = "#shared-filter > div > div.sidebar > form > div:nth-child(5) > div.filter-box-heading.text-uppercase.text-bold > h2 > a";

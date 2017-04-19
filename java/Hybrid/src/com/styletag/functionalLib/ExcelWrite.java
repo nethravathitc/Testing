@@ -330,7 +330,7 @@ public class ExcelWrite {
 					log_newrow_flag=1;
 					//System.out.println("inside else of i>rowsh2");
 					//System.out.println("inside i<rowsh2 and column value is "+col+ "column value is"+column );
-					System.out.println("i value and rowsh2 value "+i+" "+rowsh2);
+					//System.out.println("i value and rowsh2 value "+i+" "+rowsh2);
 					
 					
 						rowsh2++;
@@ -390,7 +390,7 @@ public class ExcelWrite {
 					//System.out.println("i value and rowsh2 value "+i+" "+rowsh3);
 					
 						rowsh3++;
-						System.out.println("writing to Row no inside Error "+rowsh3);
+						//System.out.println("writing to Row no inside Error "+rowsh3);
 						row= spreadsheet3.createRow(rowsh3);
 					//if(column!=-1)
 						//col=column;
