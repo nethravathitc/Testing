@@ -532,6 +532,22 @@ public void registerUser()
 					System.out.println(msg);
 					write.writeReports("Log",msg,Driver.column);
 				}
+				
+				// checking for Register button enability, button should not be enabled
+				if(register_btn.isEnabled())
+				{
+					msg="Register button enabled";
+					System.out.println(msg);
+					write.writeReports("Log", msg,Driver.column);
+					write.writeReports("Error",msg, Driver.column);
+					write.writeReports("Log","FAIL", Driver.column);
+					
+					msg="Email ID: "+name;
+					System.out.println(msg);
+					write.writeReports("Error",msg,Driver.column);
+				}
+				
+				
 			}
 			else
 			{
@@ -574,9 +590,23 @@ public void registerUser()
 					System.out.println(msg);
 					write.writeReports("Log",msg,Driver.column);
 					
-					msg="message: "+emailid_errmsg.getText();
+					msg="message: "+pwd_errmsg.getText();
 					System.out.println(msg);
 					write.writeReports("Log",msg,Driver.column);
+				}
+				
+				// checking for Register button enability, button should not be enabled
+				if(register_btn.isEnabled())
+				{
+					msg="Register button enabled";
+					System.out.println(msg);
+					write.writeReports("Log", msg,Driver.column);
+					write.writeReports("Error",msg, Driver.column);
+					write.writeReports("Log","FAIL", Driver.column);
+					
+					msg="Password: "+name;
+					System.out.println(msg);
+					write.writeReports("Error",msg,Driver.column);
 				}
 			}
 			else
@@ -593,6 +623,9 @@ public void registerUser()
 		
 		//checking invalid combination
 		//invalid name valid emailid, pwd.
+		msg="checking combination: invalid name , valid emailID, valid password";
+		System.out.println(msg);
+		write.writeReports("Log",msg, Driver.column);
 		i=i+3;// pointing to required row
 		do{
 			name=xl.read(i, 0);
@@ -634,6 +667,28 @@ public void registerUser()
 				System.out.println(msg);
 				write.writeReports("Log",msg,Driver.column);
 			}
+			// checking for Register button enability, button should not be enabled
+			if(register_btn.isEnabled())
+			{
+				msg="Register button enabled";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Error",msg, Driver.column);
+				write.writeReports("Log","FAIL", Driver.column);
+				
+				msg="Name: "+name;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+						
+				msg="EmailID: "+emailid;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+				
+				msg="Password: "+pwd;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+			}
+			/*
 			// error messages for email and password should not be shown
 			try {
 				emailid_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_emailid_errmsg_css));
@@ -659,14 +714,593 @@ public void registerUser()
 				//e.printStackTrace();
 				// if control comes here it means no error message , so no need to log
 			}
-			
-			
-			
-			
+			*/
 			i++;
 		}while(!(xl.read(i, 0).equals("Invalid email ID")));
 		
+		// checking invalid email ID, valid name and valid password
+		msg=" checking invalid email ID, valid name and valid password";
+		System.out.println(msg);
+		write.writeReports("Log",msg,Driver.column);
+		i++;// to point to next row
 		
+		do{
+			name=xl.read(i, 0);
+			emailid=xl.read(i, 1);
+			pwd=xl.read(i, 2);
+			name_textbox.clear();
+			emailid_textbox.clear();
+			pwd_textbox.clear();
+			
+			name_textbox.sendKeys(name);
+			emailid_textbox.sendKeys(emailid);
+			pwd_textbox.sendKeys(pwd);
+			
+			// only name error should display
+			emailid_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_emailid_errmsg_css));
+			if(emailid_errmsg.isDisplayed())
+			{
+			/*	msg="Error msg displayed";
+				System.out.println(msg);
+				write.writeReports("Log", msg, Driver.column);
+				*/
+				if(!(emailid_errmsg.getText()).equals(email_err_text))
+				{
+					msg="error mismatch";
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					msg="Email ID: "+emailid;
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					
+					msg="message: "+emailid_errmsg.getText();
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+				}
+			}
+			else
+			{
+				msg="Error message is not displayed";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+			}
+			// checking for Register button enability, button should not be enabled
+			if(register_btn.isEnabled())
+			{
+				msg="Register button enabled";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Error",msg, Driver.column);
+				write.writeReports("Log","FAIL", Driver.column);
+				
+				msg="Name: "+name;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+						
+				msg="EmailID: "+emailid;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+				
+				msg="Password: "+pwd;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+			}
+			
+			i++;
+		}while(!(xl.read(i, 0).equals("invalid password")));
+		
+		// checking invalid password, valid name and valid emailID
+		msg=" checking invalid password, valid name and valid emailID";
+		System.out.println(msg);
+		write.writeReports("Log",msg,Driver.column);
+		i++;// to point to next row
+		
+		do{
+			name=xl.read(i, 0);
+			emailid=xl.read(i, 1);
+			pwd=xl.read(i, 2);
+			name_textbox.clear();
+			emailid_textbox.clear();
+			pwd_textbox.clear();
+			
+			name_textbox.sendKeys(name);
+			emailid_textbox.sendKeys(emailid);
+			pwd_textbox.sendKeys(pwd);
+			
+			// only name error should display
+			pwd_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_pwd_errmsg_css));
+			if(pwd_errmsg.isDisplayed())
+			{
+			/*	msg="Error msg displayed";
+				System.out.println(msg);
+				write.writeReports("Log", msg, Driver.column);
+				*/
+				if(!(pwd_errmsg.getText()).equals(pwd_err_text))
+				{
+					msg="error message mismatch";
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					msg="Password: "+pwd;
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					
+					msg="message: "+pwd_errmsg.getText();
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+				}
+			}
+			else
+			{
+				msg="Error message is not displayed";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+			}
+			// checking for Register button enability, button should not be enabled
+			if(register_btn.isEnabled())
+			{
+				msg="Register button enabled";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Error",msg, Driver.column);
+				write.writeReports("Log","FAIL", Driver.column);
+				
+				msg="Name: "+name;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+						
+				msg="EmailID: "+emailid;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+				
+				msg="Password: "+pwd;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+			}
+			
+			i++;
+		}while(!(xl.read(i, 0).equals("Only valid password")));
+	
+		// checking invalid email ID, invalid name and valid password
+		msg=" checking invalid name, invalid emailID and valid password";
+		System.out.println(msg);
+		write.writeReports("Log",msg,Driver.column);
+		i++;// to point to next row
+		
+		do{
+			name=xl.read(i, 0);
+			emailid=xl.read(i, 1);
+			pwd=xl.read(i, 2);
+			name_textbox.clear();
+			emailid_textbox.clear();
+			pwd_textbox.clear();
+			
+			name_textbox.sendKeys(name);
+			emailid_textbox.sendKeys(emailid);
+			pwd_textbox.sendKeys(pwd);
+			
+			// only name error should display
+			emailid_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_emailid_errmsg_css));
+			name_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_name_errmsg_css));
+			
+			if(emailid_errmsg.isDisplayed())
+			{
+			/*	msg="Error msg displayed";
+				System.out.println(msg);
+				write.writeReports("Log", msg, Driver.column);
+				*/
+				if(!(emailid_errmsg.getText()).equals(email_err_text))
+				{
+					msg="error message mismatch";
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					msg="EmailID: "+emailid;
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					
+					msg="message: "+emailid_errmsg.getText();
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+				}
+			}
+			else
+			{
+				msg="Error message is not displayed";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+			}
+			
+			if(name_errmsg.isDisplayed())
+			{
+			/*	msg="Error msg displayed";
+				System.out.println(msg);
+				write.writeReports("Log", msg, Driver.column);
+				*/
+				if(!(name_errmsg.getText()).equals(name_err_text))
+				{
+					msg="error message mismatch";
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					msg="Name: "+name;
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+					
+					msg="message: "+name_errmsg.getText();
+					System.out.println(msg);
+					write.writeReports("Log",msg,Driver.column);
+				}
+			}
+			else
+			{
+				msg="Error message is not displayed";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+			}
+			
+			
+			// checking for Register button enability, button should not be enabled
+			if(register_btn.isEnabled())
+			{
+				msg="Register button enabled";
+				System.out.println(msg);
+				write.writeReports("Log", msg,Driver.column);
+				write.writeReports("Error",msg, Driver.column);
+				write.writeReports("Log","FAIL", Driver.column);
+				
+				msg="Name: "+name;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+						
+				msg="EmailID: "+emailid;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+				
+				msg="Password: "+pwd;
+				System.out.println(msg);
+				write.writeReports("Error",msg,Driver.column);
+			}
+			
+			i++;
+		}while(!(xl.read(i, 0).equals("only valid name")));
+		
+		// checking invalid email ID, valid name and invalid password
+				msg="checking invalid email ID, valid name and invalid password";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				i++;// to point to next row
+				
+				do{
+					name=xl.read(i, 0);
+					emailid=xl.read(i, 1);
+					pwd=xl.read(i, 2);
+					name_textbox.clear();
+					emailid_textbox.clear();
+					pwd_textbox.clear();
+					
+					name_textbox.sendKeys(name);
+					emailid_textbox.sendKeys(emailid);
+					pwd_textbox.sendKeys(pwd);
+					
+					// only name error should display
+					emailid_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_emailid_errmsg_css));
+					pwd_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_pwd_errmsg_css));
+					
+					if(emailid_errmsg.isDisplayed())
+					{
+					/*	msg="Error msg displayed";
+						System.out.println(msg);
+						write.writeReports("Log", msg, Driver.column);
+						*/
+						if(!(emailid_errmsg.getText()).equals(email_err_text))
+						{
+							msg="error message mismatch";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							msg="EmailID: "+emailid;
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							
+							msg="message: "+emailid_errmsg.getText();
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						msg="Error message is not displayed";
+						System.out.println(msg);
+						write.writeReports("Log",msg,Driver.column);
+					}
+					
+					if(pwd_errmsg.isDisplayed())
+					{
+					/*	msg="Error msg displayed";
+						System.out.println(msg);
+						write.writeReports("Log", msg, Driver.column);
+						*/
+						if(!(pwd_errmsg.getText()).equals(pwd_err_text))
+						{
+							msg="error message mismatch";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							msg="Passord: "+pwd;
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							
+							msg="message: "+name_errmsg.getText();
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						msg="Error message is not displayed";
+						System.out.println(msg);
+						write.writeReports("Log",msg,Driver.column);
+					}
+					
+					
+					// checking for Register button enability, button should not be enabled
+					if(register_btn.isEnabled())
+					{
+						msg="Register button enabled";
+						System.out.println(msg);
+						write.writeReports("Log", msg,Driver.column);
+						write.writeReports("Error",msg, Driver.column);
+						write.writeReports("Log","FAIL", Driver.column);
+						
+						msg="Name: "+name;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+								
+						msg="EmailID: "+emailid;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+						
+						msg="Password: "+pwd;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+					}
+					
+					i++;
+				}while(!(xl.read(i, 0).equals("only valid email ID")));
+		
+				// checking valid email ID, invalid name and invalid password
+				msg="checking valid email ID, invalid name and invalid password";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				i++;// to point to next row
+				
+				do{
+					name=xl.read(i, 0);
+					emailid=xl.read(i, 1);
+					pwd=xl.read(i, 2);
+					name_textbox.clear();
+					emailid_textbox.clear();
+					pwd_textbox.clear();
+					
+					name_textbox.sendKeys(name);
+					emailid_textbox.sendKeys(emailid);
+					pwd_textbox.sendKeys(pwd);
+					
+					// only name error should display
+					name_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_name_errmsg_css));
+					pwd_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_pwd_errmsg_css));
+					
+					if(name_errmsg.isDisplayed())
+					{
+					/*	msg="Error msg displayed";
+						System.out.println(msg);
+						write.writeReports("Log", msg, Driver.column);
+						*/
+						if(!(name_errmsg.getText()).equals(name_err_text))
+						{
+							msg="error message mismatch";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							msg="Name: "+name;
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							
+							msg="message: "+name_errmsg.getText();
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						msg="Error message is not displayed";
+						System.out.println(msg);
+						write.writeReports("Log",msg,Driver.column);
+					}
+					
+					if(pwd_errmsg.isDisplayed())
+					{
+					/*	msg="Error msg displayed";
+						System.out.println(msg);
+						write.writeReports("Log", msg, Driver.column);
+						*/
+						if(!(pwd_errmsg.getText()).equals(pwd_err_text))
+						{
+							msg="error message mismatch";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							msg="Passord: "+pwd;
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							
+							msg="message: "+name_errmsg.getText();
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						msg="Error message is not displayed";
+						System.out.println(msg);
+						write.writeReports("Log",msg,Driver.column);
+					}
+					
+					
+					// checking for Register button enability, button should not be enabled
+					if(register_btn.isEnabled())
+					{
+						msg="Register button enabled";
+						System.out.println(msg);
+						write.writeReports("Log", msg,Driver.column);
+						write.writeReports("Error",msg, Driver.column);
+						write.writeReports("Log","FAIL", Driver.column);
+						
+						msg="Name: "+name;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+								
+						msg="EmailID: "+emailid;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+						
+						msg="Password: "+pwd;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+					}
+					
+					i++;
+				}while(!(xl.read(i, 0).equals("all invalid")));
+				
+				// checking all invalid
+				msg="checking all invalid";
+				System.out.println(msg);
+				write.writeReports("Log",msg,Driver.column);
+				i++;// to point to next row
+				
+				do{
+					//System.out.println("i value in all invalid: "+i);
+					name=xl.read(i, 0);
+					//System.out.println("Name: "+name);
+					emailid=xl.read(i, 1);
+					//System.out.println("emailid: "+emailid);
+
+					pwd=xl.read(i, 2);
+					//System.out.println("Password: "+pwd);
+					name_textbox.clear();
+					emailid_textbox.clear();
+					pwd_textbox.clear();
+					
+					name_textbox.sendKeys(name);
+
+					emailid_textbox.sendKeys(emailid);
+					pwd_textbox.sendKeys(pwd);
+					
+					// only name error should display
+					name_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_name_errmsg_css));
+					emailid_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_emailid_errmsg_css));
+					pwd_errmsg=webdriver.findElement(By.cssSelector(UIobjects.register_pwd_errmsg_css));
+					
+					if(name_errmsg.isDisplayed())
+					{
+					/*	msg="Error msg displayed";
+						System.out.println(msg);
+						write.writeReports("Log", msg, Driver.column);
+						*/
+						if(!(name_errmsg.getText()).equals(name_err_text))
+						{
+							msg="error message mismatch";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							msg="Name: "+name;
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							
+							msg="message: "+name_errmsg.getText();
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						msg="Error message is not displayed";
+						System.out.println(msg);
+						write.writeReports("Log",msg,Driver.column);
+					}
+					
+					if(emailid_errmsg.isDisplayed())
+					{
+					/*	msg="Error msg displayed";
+						System.out.println(msg);
+						write.writeReports("Log", msg, Driver.column);
+						*/
+						if(!(emailid_errmsg.getText()).equals(email_err_text))
+						{
+							msg="error message mismatch";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							msg="Email ID: "+emailid;
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							
+							msg="message: "+emailid_errmsg.getText();
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						msg="Error message is not displayed";
+						System.out.println(msg);
+						write.writeReports("Log",msg,Driver.column);
+					}
+					
+					if(pwd_errmsg.isDisplayed())
+					{
+					/*	msg="Error msg displayed";
+						System.out.println(msg);
+						write.writeReports("Log", msg, Driver.column);
+						*/
+						if(!(pwd_errmsg.getText()).equals(pwd_err_text))
+						{
+							msg="error message mismatch";
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							msg="Passord: "+pwd;
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+							
+							msg="message: "+name_errmsg.getText();
+							System.out.println(msg);
+							write.writeReports("Log",msg,Driver.column);
+						}
+					}
+					else
+					{
+						msg="Error message is not displayed";
+						System.out.println(msg);
+						write.writeReports("Log",msg,Driver.column);
+					}
+					
+					
+					// checking for Register button enability, button should not be enabled
+					if(register_btn.isEnabled())
+					{
+						msg="Register button enabled";
+						System.out.println(msg);
+						write.writeReports("Log", msg,Driver.column);
+						write.writeReports("Error",msg, Driver.column);
+						write.writeReports("Log","FAIL", Driver.column);
+						
+						msg="Name: "+name;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+								
+						msg="EmailID: "+emailid;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+						
+						msg="Password: "+pwd;
+						System.out.println(msg);
+						write.writeReports("Error",msg,Driver.column);
+					}
+					
+					i++;
+				}while(!(xl.read(i, 0).equals("valid data")));		
 		
 		//Registering with valid data
 		 Random rand = new Random();
@@ -684,6 +1318,10 @@ public void registerUser()
 		msg="password: "+pwd;
 		System.out.println(msg);
 		write.writeReports("Log", msg, Driver.column);
+		
+		name_textbox.clear();
+		emailid_textbox.clear();
+		pwd_textbox.clear();
 		
 		wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(UIobjects.regiter_name_css)));
 		webdriver.findElement(By.cssSelector(UIobjects.regiter_name_css)).sendKeys(name);;
