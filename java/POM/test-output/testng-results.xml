@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="68431" started-at="2017-05-29T08:43:07Z" finished-at="2017-05-29T08:44:15Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="68431" started-at="2017-05-29T08:43:07Z" finished-at="2017-05-29T08:44:15Z">
+      <class name="TestScripts.ProductDetailPageTest">
+        <test-method status="PASS" signature="setUP()[pri:0, instance:TestScripts.ProductDetailPageTest@29774679]" name="setUP" is-config="true" duration-ms="45294" started-at="2017-05-29T14:13:07Z" finished-at="2017-05-29T14:13:52Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUP -->
+        <test-method status="PASS" signature="gotoProductDetailPage()[pri:0, instance:TestScripts.ProductDetailPageTest@29774679]" name="gotoProductDetailPage" duration-ms="22292" started-at="2017-05-29T14:13:52Z" finished-at="2017-05-29T14:14:14Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- gotoProductDetailPage -->
+        <test-method status="PASS" signature="afterTest()[pri:0, instance:TestScripts.ProductDetailPageTest@29774679]" name="afterTest" is-config="true" duration-ms="810" started-at="2017-05-29T14:14:14Z" finished-at="2017-05-29T14:14:15Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterTest -->
+      </class> <!-- TestScripts.ProductDetailPageTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

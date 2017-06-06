@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="HOME_URL">http://m.stest.in</entry>
+	<entry key="BrowserName">chrome</entry>
+	<entry key="Platforms">adroid</entry>
+	<entry key="PlatformName">Android</entry>
+	<entry key="DeviceName">genymotion</entry>
+	<entry key="Version">5.1</entry>
+
+	<entry key="FromEmailID">tabs@styletag.com</entry>
+	<entry key="Password">styletag321</entry>
+	<entry key="ToEmailID">nethravathi.tc@styletag.com,sumit.kumar@styletag.com,rashmi.un@styletag.com,siddesh.sh@styletag.com</entry>
+
+</properties>

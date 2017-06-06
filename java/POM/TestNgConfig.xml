@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestSuit" parallel="true">
+  <test name="Home page Test">
+    <classes>
+      <class name="com.styletag.scripts.LaunchBrowser"/>
+      <class name="com.styletag.scripts.HomePage"/>
+    </classes>
+  </test> 
+  <test name="Login Test">
+  	<classes>
+  	
+  		<class name="com.styletag.scripts.LaunchBrowser"/>
+  		<class name="com.styletag.scripts.Login"/>
+  	</classes>
+  </test>
+  <!-- Test -->
+</suite> <!-- Suite -->
