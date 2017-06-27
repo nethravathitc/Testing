@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [Suite1]">
+  <test name="Nopackage(failed)">
+    <classes>
+      <class name="NewTest">
+        <methods>
+          <include name="justTest"/>
+          <include name="fun1"/>
+          <include name="func2"/>
+          <include name="func3"/>
+        </methods>
+      </class> <!-- NewTest -->
+    </classes>
+  </test> <!-- Nopackage(failed) -->
+  <test name="Regression1(failed)">
+    <parameter name="value" value="value from config file"/>
+    <classes>
+      <class name="SecondTest">
+        <methods>
+          <include name="function2"/>
+          <include name="function1"/>
+        </methods>
+      </class> <!-- SecondTest -->
+      <class name="NewTest">
+        <methods>
+          <include name="justTest"/>
+          <include name="fun1"/>
+          <include name="func2"/>
+          <include name="func3"/>
+        </methods>
+      </class> <!-- NewTest -->
+    </classes>
+  </test> <!-- Regression1(failed) -->
+</suite> <!-- Failed suite [Suite1] -->

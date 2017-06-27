@@ -1,0 +1,40 @@
+2017-05-18 15:54:53,870 [main] INFO newLog - inside func2 through logger
+2017-05-18 15:54:53,874 [main] INFO newLog - New message
+2017-05-18 15:54:53,932 [main] INFO newLog - inside func2 through logger
+2017-05-18 15:54:53,933 [main] INFO newLog - New message
+2017-05-18 15:56:04,698 [main] INFO newLog - inside func2 through logger
+2017-05-18 15:56:04,702 [main] INFO newLog - New message
+2017-05-18 15:56:04,776 [main] INFO newLog - inside func2 through logger
+2017-05-18 15:56:04,778 [main] INFO newLog - New message
+2017-05-18 15:56:57,075 [main] INFO newLog - inside func2 through logger
+2017-05-18 15:56:57,080 [main] INFO newLog - New message
+2017-05-18 15:56:57,150 [main] INFO newLog - inside func2 through logger
+2017-05-18 15:56:57,151 [main] INFO newLog - New message
+2017-05-22 15:51:01,019 [main] INFO newLog - inside func2 through logger
+2017-05-22 15:51:01,038 [main] INFO newLog - New message
+2017-05-22 15:51:01,092 [main] INFO newLog - inside func2 through logger
+2017-05-22 15:51:01,092 [main] INFO newLog - New message
+2017-05-22 17:51:18,425 [main] INFO newLog - inside func2 through logger
+2017-05-22 17:51:18,432 [main] INFO newLog - New message
+2017-05-22 17:51:18,487 [main] INFO newLog - inside func2 through logger
+2017-05-22 17:51:18,488 [main] INFO newLog - New message
+2017-05-23 12:48:52,917 [main] INFO newLog - inside func2 through logger
+2017-05-23 12:48:52,939 [main] INFO newLog - New message
+2017-05-23 12:48:52,999 [main] INFO newLog - inside func2 through logger
+2017-05-23 12:48:52,999 [main] INFO newLog - New message
+2017-05-23 12:51:10,977 [main] INFO newLog - inside func2 through logger
+2017-05-23 12:51:10,982 [main] INFO newLog - New message
+2017-05-23 12:51:11,041 [main] INFO newLog - inside func2 through logger
+2017-05-23 12:51:11,041 [main] INFO newLog - New message
+2017-05-23 12:51:53,701 [main] INFO newLog - inside func2 through logger
+2017-05-23 12:51:53,706 [main] INFO newLog - New message
+2017-05-23 12:52:35,990 [main] INFO newLog - inside func2 through logger
+2017-05-23 12:52:35,998 [main] INFO newLog - New message
+2017-05-23 13:26:41,264 [main] INFO newLog - inside func2 through logger
+2017-05-23 13:26:41,270 [main] INFO newLog - New message
+2017-05-23 13:26:55,293 [main] INFO newLog - inside func2 through logger
+2017-05-23 13:26:55,297 [main] INFO newLog - New message
+2017-05-23 13:26:55,375 [main] INFO newLog - inside func2 through logger
+2017-05-23 13:26:55,376 [main] INFO newLog - New message
+2017-06-12 11:36:29,922 [main] INFO newLog - inside func2 through logger
+2017-06-12 11:36:30,045 [main] INFO newLog - New message

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;PageObjects.ProductLisringPage&apos; to &apos;ProductListingPage&apos;&#x0A;- Original project: &apos;POM&apos;&#x0A;- Original element: &apos;PageObjects.ProductLisringPage&apos;&#x0A;- Renamed element: &apos;PageObjects.ProductListingPage&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;ProductLisringPage&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;PageObjects{ProductLisringPage.java[ProductLisringPage" matchStrategy="1" name="ProductListingPage" qualified="false" references="true" similarDeclarations="false" stamp="1496035899083" textual="false" version="1.0"/>
+</session>

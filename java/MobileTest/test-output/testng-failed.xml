@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [TestSuit]" parallel="methods">
+  <test name="Login Test(failed)" parallel="methods">
+    <classes>
+      <class name="com.styletag.scripts.Login">
+        <methods>
+          <include name="loginPageTest"/>
+          <include name="setDriver"/>
+          <include name="sliderMenu"/>
+        </methods>
+      </class> <!-- com.styletag.scripts.Login -->
+    </classes>
+  </test> <!-- Login Test(failed) -->
+</suite> <!-- Failed suite [TestSuit] -->
